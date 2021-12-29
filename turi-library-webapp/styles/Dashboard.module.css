@@ -1,0 +1,4 @@
+
+.body{
+    @apply flex h-screen w-screen;
+}

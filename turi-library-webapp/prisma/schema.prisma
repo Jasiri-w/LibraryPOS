@@ -1,0 +1,54 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Student {
+  id             Int        @id @default(autoincrement())
+  first_name     String
+  last_name      String
+  boarding_house String
+  year_group     String
+  gender         String
+  Checkout       Checkout[]
+  Returns        Return[]
+}
+
+model Checkout {
+  id            Int      @id @default(autoincrement())
+  book_id       Int
+  student_id    Int
+  checkout_date DateTime @default(now())
+  Book          Book     @relation(fields: [book_id], references: [id])
+  Student       Student  @relation(fields: [student_id], references: [id])
+}
+
+model Return {
+  id            Int      @id @default(autoincrement())
+  book_id       Int
+  student_id    Int
+  checkout_date DateTime
+  return_date   DateTime @default(now())
+  Book          Book     @relation(fields: [book_id], references: [id])
+  Student       Student  @relation(fields: [student_id], references: [id])
+}
+
+model Book {
+  id        Int        @id @default(autoincrement())
+  barcode   Int
+  title     String
+  author    String
+  class     String
+  media     String
+  URL       String
+  returned  Boolean    @default(true)
+  Checkouts Checkout[]
+  Returns   Return[]
+}
