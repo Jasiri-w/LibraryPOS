@@ -66,7 +66,7 @@ const AllBooks = () => {
         <div className="split card-container">
             <h1 className="text-center text-8xl text-black">All Books</h1>
             <button onClick={fetchBooks}>Load Books</button>
-            <div className="book-list mx-auto ">
+            <div id="allbooks" className="book-list mx-auto ">
                 <ol>
                     {
                         books.map(book => {

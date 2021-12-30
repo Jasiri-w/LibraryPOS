@@ -16,16 +16,12 @@ const UnavailableBooks = (props) => {
     const [checkouts, setCheckout] = useState(props.db_data.checkouts);
     console.log("Unavailable Books")
     console.table(checkouts)
-    var information = []
-    /*for(var x = 0; x < checkouts.length; x++){
-        information.push(checkout)
-    }*
     return(
         <ol>
             {
                 checkouts.map(check =>{
                     return(
-                        <li key={check.id}>{check.id}</li>
+                        <li key={check.id}>{check.id}.) {check.Student.first_name} {check.Student.last_name} - {check.Book.title} by {check.Book.author} </li>
                     );
                 })
             }

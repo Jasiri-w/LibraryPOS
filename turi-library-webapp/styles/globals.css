@@ -26,6 +26,8 @@ a {
   }
   .card-container{
     @apply bg-gray-400
+    border-gray-400
+    border-2
     rounded-3xl
     m-5
     p-6;
@@ -33,7 +35,6 @@ a {
   .card-container:hover,.card-container:active, .card-container:focus{
     @apply rounded-lg
     bg-transparent
-    border-2
     border-emerald-700;
   }
   .card-container > h1 {
@@ -118,5 +119,12 @@ a {
     mx-2;
   }
 
+  
+  
+}
 
+.book-list#allbooks{
+  overflow-x: hidden;
+  overflow-y: scroll;
+  max-height: 80%;
 }
