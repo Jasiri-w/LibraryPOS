@@ -40,7 +40,8 @@ export default function Home(props) {
 ///For next time: In order for the frontend to display the book and the student to which the book is 
 // checked out, then the books requried must be queried here in the backend getServerSideProps.
 // Then the book, student and timing data need to be placed in a single object relating to one 
-// checkout. DONE This should be served as its own prop for efficiency. 
+// checkout. DONE This should be served as its own prop for efficiency.  DONE
+
 // Next we need to understand the "Post" features of prisma so that we can checkout and return 
 // books without refresh in the form. We have to use hooks to data bind the portrayed checkout list 
 // while still updating the database as fast as possible with as few refreshes as possible.
@@ -75,12 +76,12 @@ export async function getServerSideProps() {
     books: await prisma.book.findMany(),
   }
 
-  console.log("Database_data at GSSP function in main page:");
+  /*console.log("Database_data at GSSP function in main page:");
   console.table(database_data);
   console.log("Serialized Checkouts: ");
   console.table(ser_checkouts);
   console.log("Checkouts Rawdogged");
-  console.table(checkouts);
+  console.table(checkouts);*/
   return{
     props:{
         hello: "Jasiri",

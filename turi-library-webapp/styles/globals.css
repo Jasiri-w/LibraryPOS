@@ -19,6 +19,22 @@ a {
   box-sizing: border-box;
 }
 
+@layer base{
+  input{
+    @apply border border-emerald-800 rounded-lg 
+    shadow-sm 
+    px-3 py-3
+    focus:outline-none focus:border-indigo-500 focus:ring focus:ring-indigo-500;
+  }
+  button, input[type="submit"] {
+    @apply bg-emerald-400 focus:ring focus:ring-emerald-500 px-3 py-3 rounded-lg shadow-sm;
+  }
+}
+
+button:hover, input[type="submit"]:hover {
+  cursor: pointer;
+}
+
 @layer components{
   
   .dashboard-container{

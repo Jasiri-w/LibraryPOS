@@ -14,8 +14,8 @@ function DueBooks(props){
 
 const UnavailableBooks = (props) => {
     const [checkouts, setCheckout] = useState(props.db_data.checkouts);
-    console.log("Unavailable Books")
-    console.table(checkouts)
+    /*console.log("Unavailable Books")
+    console.table(checkouts)*/
     return(
         <ol>
             {
