@@ -2,18 +2,18 @@ import {PrismaClient} from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   
   if (req.method !== 'POST'){
     res.status(200).json({ name: 'John Doe' })
 
   }
 
-  const checkoutData = json.parse(req.body);
+  const checkoutData = JSON.parse(req.body);
 
-  const savedCheckout = await prisma.connect.create({
+  const savedCheckout = await prisma.checkout.create({
     data: checkoutData,
   });
 
   res.json(savedCheckout);
-}
+};

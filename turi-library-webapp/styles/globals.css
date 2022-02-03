@@ -135,8 +135,14 @@ button:hover, input[type="submit"]:hover {
     mx-2;
   }
 
+
   
   
+}
+
+.checkout-elem:hover{
+  text-decoration: line-through;
+  cursor: pointer;
 }
 
 .book-list#allbooks{

@@ -4,13 +4,10 @@ import { useState } from 'react';
 import DueBooks from '../DueBooks';
 
 const MainContent = (props) => {
-
     return (
         <>
-            <div className="dashboard-container justify-center">
-                <BookExchange students={props.db_data.students} books={props.db_data.books}/>
-                <DueBooks db_data={props.db_data}/>
-            </div>
+            <ExchangeRow db_data={props.db_data} students={props.db_data.students} books={props.db_data.books} />
+            {/**<DueBooks  checkouts={checkouts} setCheckout={setCheckout}/>**/}
             <div className="dashboard-container">
                 <AllBooks/>
             </div>
@@ -19,8 +16,8 @@ const MainContent = (props) => {
 };
 
 
-const BookExchange = (props) => {
-
+const ExchangeRow = (props) => {
+    const [checkouts, setCheckout] = useState(props.db_data.checkouts);
     const [inputs, setInputs] = useState({
         student_id: "",
     });
@@ -99,7 +96,7 @@ const BookExchange = (props) => {
     async function saveCheckout(checkout){
         const response = await fetch('/api/checkouts', {
           method: 'POST',
-          body: JSON.stringify(contact)
+          body: JSON.stringify(checkout)
         });
         if(!response.ok){
           throw new Error(response.statusText);
@@ -108,49 +105,112 @@ const BookExchange = (props) => {
         return await response.json();
     }
 
-    const handleSubmit = async (event, data) => {
-        console.table(data);
-        alert(data.student_id);
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        /**try{
-            await saveCheckout(data);
+        /** Unnecessary but alot of good work i might need later
+         * const formData = new FormData(event.target);
+         * var student_id = formData.get('student_id');
+         * var book_id = formData.get('barcode'); **/
+        const formData = new FormData(event.target);
+        var student_id = formData.get('student_id');
+
+        const new_checkout = {
+            student_id: student_information.holdings.id,
+            book_id: book_information.holdings.id,
+        }
+        try{
+            const saved = await saveCheckout(new_checkout);
+            const new_checkout_frontend = {
+                ///id:  String.fromCharCode(65 + Math.floor(Math.random() * 26)) + Date.now(),
+                id:  parseInt(saved.id),
+                Student: {
+                    first_name: student_information.holdings.first_name, 
+                    last_name: student_information.holdings.last_name, 
+                },
+                Book: {
+                    title: book_information.holdings.title,
+                    author: book_information.holdings.author,
+                }
+            }
             event.target.reset();
+            setCheckout(checkouts.concat(new_checkout_frontend));
+            event.target.querySelector("input[name='student_id']").value = student_id;
+            event.target.querySelector("input[name='student_id']").focus();
         } catch (err) {
             console.log(err);
-        }**/
+        }
+    }
+
+    const deleteCheckout = async (checkout_id) => {
+        const requestString = '/api/deleteCheckout/' + checkout_id;
+        const response = await fetch(requestString, {
+          method: 'POST',
+        });
+        if(!response.ok){
+          throw new Error(response.statusText);
+        }
+      
+        return await response.json();
+    }
+
+    const handleDelete = async (event) => {
+        var checkout_id = event.target.id;
+        try{
+            const deleted = await deleteCheckout(checkout_id);
+            //change frontend list of checkouts
+            setCheckout(checkouts.filter(record => record.id !== deleted.id));
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div className="card-container ">
-                <h1 className="text-center text-black mb-3">Sign Out | Return Book</h1>
-                <div className="grid grid-cols-2 gap-6">
-                    <label className="block">
-                        <span className="text-gray-700">Student ID</span>
-                        <input name="student_id" type="text" className="mt-1 block w-full" placeholder="123456789" value={inputs.student_id || ""} onChange={handleChangeStudent}/>
-                    </label>
-                    <label className="block">
-                        <span className="text-gray-700 block">{student_information.holdings.first_name || ""}</span>
-                        <span className="text-gray-700 block">{student_information.holdings.boarding_house || ""}</span>
-                    </label>
-                    <label className="block">
-                        <span className="text-gray-700">Book Barcode</span>
-                        <input name="barcode" value={inputs.barcode || ""} onChange={handleChangeBook} type="text" className="mt-1 block w-full" placeholder="123456789"/>
-                    </label>
-                    <label className="block">
-                        <span className="text-gray-700">Title</span>
-                        <input name="title" onChange={handleChange} value={inputs.title || ""} type="text" className="mt-1 block w-full" placeholder="Of Mice and Men" />
-                    </label>
-                    <label className="block">
-                        <span className="text-gray-700">Author</span>
-                        <input name="author" value={inputs.author || ""} onChange={handleChange} type="text" className="mt-1 block w-full" placeholder="John Steinbeck"/>
-                    </label>
-                    <label className="block">
-                        <input type ="submit"></input>
-                    </label>
+        <div className="dashboard-container justify-center">
+            <form id="exchange_form" onSubmit={handleSubmit}>
+                <div className="card-container ">
+                    <h1 className="text-center text-black mb-3">Sign Out | Return Book</h1>
+                    <div className="grid grid-cols-2 gap-6">
+                        <label className="block">
+                            <span className="text-gray-700">Student ID</span>
+                            <input name="student_id" type="text" className="mt-1 block w-full" placeholder="123456789" value={inputs.student_id || ""} onChange={handleChangeStudent}/>
+                        </label>
+                        <label className="block">
+                            <span className="text-gray-700 block">{student_information.holdings.first_name || ""}</span>
+                            <span className="text-gray-700 block">{student_information.holdings.boarding_house || ""}</span>
+                        </label>
+                        <label className="block">
+                            <span className="text-gray-700">Book Barcode</span>
+                            <input name="barcode" value={inputs.barcode || ""} onChange={handleChangeBook} type="text" className="mt-1 block w-full" placeholder="123456789"/>
+                        </label>
+                        <label className="block">
+                            <span className="text-gray-700">Title</span>
+                            <input name="title" onChange={handleChange} value={inputs.title || ""} type="text" className="mt-1 block w-full" placeholder="Of Mice and Men" />
+                        </label>
+                        <label className="block">
+                            <span className="text-gray-700">Author</span>
+                            <input name="author" value={inputs.author || ""} onChange={handleChange} type="text" className="mt-1 block w-full" placeholder="John Steinbeck"/>
+                        </label>
+                        <label className="block">
+                            <input type ="submit"></input>
+                        </label>
+                    </div>
+                </div>
+            </form>
+            <div className="split card-container">
+                <h1 className="text-center text-8xl text-black">Books Signed Out</h1>
+                <div className="book-list mx-auto">
+                    <ol>
+                        {
+                            checkouts.map(check =>{
+                                return(
+                                    <li class="checkout-elem" onClick={handleDelete} id={check.id} key={check.id}> {check.Student.first_name} {check.Student.last_name} - {check.Book.title} by {check.Book.author} </li>
+                                );
+                            })
+                        }
+                    </ol>
                 </div>
             </div>
-        </form>
+        </div>
     );
 };
 

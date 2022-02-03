@@ -6,14 +6,15 @@ function DueBooks(props){
             <h1 className="text-center text-8xl text-black">Books Signed Out</h1>
             <div className="book-list mx-auto">
                 <p>{ props.hello }</p>
-                <UnavailableBooks db_data={props.db_data}/>
+                <UnavailableBooks db_data={props.db_data} checkouts={props.checkouts} setCheckout={props.setCheckout}/>
             </div>
         </div>
     );
 };
 
 const UnavailableBooks = (props) => {
-    const [checkouts, setCheckout] = useState(props.db_data.checkouts);
+    const checkouts = props.checkouts;
+    const setCheckout = props.setCheckout;
     /*console.log("Unavailable Books")
     console.table(checkouts)*/
     return(
