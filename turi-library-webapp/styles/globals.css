@@ -33,11 +33,12 @@ button:hover, input[type="submit"]:hover {
 @layer components{
   .field{
     @apply mt-1 block w-full
-    border  
+    border-emerald-500
     shadow-sm 
     px-3 py-3
-    focus:outline-none focus:border-indigo-500 focus:ring focus:ring-indigo-500 
-    focus:border-emerald-800 focus:rounded-lg;
+    focus:outline-none focus:ring focus:ring-emerald-500 
+   hover:rounded-lg
+   ease-in-out transition-all duration-150;
   }
 
   .dashboard-container{
@@ -74,7 +75,8 @@ button:hover, input[type="submit"]:hover {
     bg-opacity-90 
     w-full h-48
     px-9
-    shadow-lg
+    hover:shadow-lg
+    ease-in-out transition-all duration-150
     max-h-20;
   }
   
@@ -148,14 +150,69 @@ button:hover, input[type="submit"]:hover {
     @apply py-6;
   }
 
+  .link-container{
+    @apply mx-auto text-center;
+  }
   
   
   
 }
 
-.checkout-elem:hover{
-  text-decoration: line-through;
+.title-text:after{
+  content: "\21BA";
+  visibility: hidden;
+  padding-left: 4px;
+  font-size: 0.8em;
+}
+.title-text:hover{
+  cursor:pointer;
+}
+.title-text:hover:after{
+  visibility: visible;
+}
+
+.link{
+  color: #047857;
+  font-size: 1.8rem; 
+  transition: padding-left 250ms ease-in-out; 
+}
+
+.link:hover{
+  /*text-decoration: line-through;*/
+  color: #247877;
+  /*font-style: italic;*/
   cursor: pointer;
+  padding-left: 0.5rem;
+  text-decoration:none  ;
+}
+
+.link:before{
+  display:none;
+  content: "\21D2 Go to \205D";
+  font-size: 1.1rem;
+}
+
+.link:hover:before{
+  display: inline-block;
+}
+
+.checkout-elem{
+  transition: padding-left 250ms ease-in-out; 
+}
+.checkout-elem:hover{
+  /*text-decoration: line-through;*/
+  font-style: italic;
+  cursor: pointer;
+  padding-left: 1rem;
+}
+.checkout-elem:after{
+  visibility:hidden;
+  content: "Return Book x";
+  color: #ff1166;
+  font-size: 1.2rem;
+}
+.checkout-elem:hover:after{
+  visibility: visible;
 }
 
 .book-list#allbooks{

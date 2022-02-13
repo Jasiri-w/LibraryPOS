@@ -164,6 +164,14 @@ const ExchangeRow = (props) => {
         }
     }
 
+    const dateify = (date) => {
+        if(date == undefined){
+            return " just now ...";
+        }else{
+            return date.substring(0,10);
+        }
+    }
+
     return (
         <div className="dashboard-container justify-center">
             <form className="split "id="exchange_form" onSubmit={handleSubmit}>
@@ -191,23 +199,29 @@ const ExchangeRow = (props) => {
                             <input name="author" value={inputs.author || ""} onChange={handleChange} type="text" className="field" placeholder="John Steinbeck"/>
                         </label>
                         <label className="block">
-                            <input type ="submit"></input>
+                            <input type ="submit" value="Checkout"></input>
                         </label>
                     </div>
                 </div>
             </form>
-            <div className="split card-container">
-                <h1 className="text-center text-8xl text-black">Books Signed Out</h1>
-                <div className="book-list mx-auto">
-                    <ol>
-                        {
-                            checkouts.map(check =>{
-                                return(
-                                    <li class="checkout-elem" onClick={handleDelete} id={check.id} key={check.id}> {check.Student.first_name} {check.Student.last_name} - {check.Book.title} by {check.Book.author} </li>
-                                );
-                            })
-                        }
-                    </ol>
+            <div className="split flex-col">
+                <div className="card-container">
+                    <h1 className="text-center text-8xl text-black">Books Signed Out</h1>
+                    <div className="book-list mx-auto">
+                        <ol>
+                            {
+                                checkouts.map(check =>{
+                                    return(
+                                        <li class="checkout-elem" onClick={handleDelete} id={check.id} key={check.id}> {check.Student.first_name} {check.Student.last_name} - {check.Book.title} by {check.Book.author} - Since {dateify(check.checkout_date)} </li>
+                                    );
+                                })
+                            }
+                        </ol>
+                    </div>
+                </div>
+                <div className="link-container">
+                    <p className="link">All Books</p>
+                    <p className="link">Checkout Log</p>
                 </div>
             </div>
         </div>

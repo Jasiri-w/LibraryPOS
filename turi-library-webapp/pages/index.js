@@ -57,15 +57,15 @@ export async function getServerSideProps() {
   
   const ser_checkouts = checkouts.map(check => {
     var neck = check;
-    neck.checkout_date = superjson.stringify(check.checkout_date);
-    neck.return_date = superjson.stringify(check.return_date);
+    neck.checkout_date = JSON.parse(superjson.stringify(check.checkout_date)).json;
+    /*neck.return_date = JSON.parse(check.return_date).json;*/
     return neck;
   })
   
   const ser_returns = returns.map(ret => {
     var newret = ret;
-    newret.checkout_date = superjson.stringify(ret.checkout_date);
-    newret.return_date = superjson.stringify(ret.return_date);
+    newret.checkout_date = JSON.parse(superjson.stringify(ret.checkout_date)).json;
+    newret.return_date = JSON.parse(superjson.stringify(ret.return_date)).json;
     return newret;
   })
 
@@ -75,6 +75,10 @@ export async function getServerSideProps() {
     students: await prisma.student.findMany(),
     books: await prisma.book.findMany(),
   }
+
+  /*for(var x = 0; x < ser_checkouts.length; x++){
+    console.log(JSON.parse(checkouts[x].checkout_date).json);
+  }*/
 
   /*console.log("Database_data at GSSP function in main page:");
   console.table(database_data);
