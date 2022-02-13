@@ -20,12 +20,7 @@ a {
 }
 
 @layer base{
-  input{
-    @apply border border-emerald-800 rounded-lg 
-    shadow-sm 
-    px-3 py-3
-    focus:outline-none focus:border-indigo-500 focus:ring focus:ring-indigo-500;
-  }
+  
   button, input[type="submit"] {
     @apply bg-emerald-400 focus:ring focus:ring-emerald-500 px-3 py-3 rounded-lg shadow-sm;
   }
@@ -36,25 +31,34 @@ button:hover, input[type="submit"]:hover {
 }
 
 @layer components{
-  
+  .field{
+    @apply mt-1 block w-full
+    border  
+    shadow-sm 
+    px-3 py-3
+    focus:outline-none focus:border-indigo-500 focus:ring focus:ring-indigo-500 
+    focus:border-emerald-800 focus:rounded-lg;
+  }
+
   .dashboard-container{
     @apply h-full flex justify-center;
   }
   .card-container{
-    @apply bg-gray-400
+    @apply /**bg-gray-400
     border-gray-400
-    border-2
+    border-2**/
+
     rounded-3xl
     m-5
     p-6;
   }
   .card-container:hover,.card-container:active, .card-container:focus{
     @apply rounded-lg
-    bg-transparent
-    border-emerald-700;
+    ;
   }
   .card-container > h1 {
-    @apply text-3xl text-center text-gray-600 font-bold;
+    @apply text-4xl  font-bold
+    text-black mb-6;
   }
 
   .split{
@@ -70,7 +74,8 @@ button:hover, input[type="submit"]:hover {
     bg-opacity-90 
     w-full h-48
     px-9
-    shadow-lg;
+    shadow-lg
+    max-h-20;
   }
   
   .header-icon {
@@ -135,7 +140,15 @@ button:hover, input[type="submit"]:hover {
     mx-2;
   }
 
+  .book-list{
+    @apply py-6;
+  }
 
+  #book-form-grid{
+    @apply py-6;
+  }
+
+  
   
   
 }
@@ -149,4 +162,17 @@ button:hover, input[type="submit"]:hover {
   overflow-x: hidden;
   overflow-y: scroll;
   max-height: 80%;
+}
+
+.card-container:after {
+  display:block;
+  content: '';
+  margin-top: 2rem;
+  border-bottom: solid 3px #047857;  
+  transform: scaleX(0);  
+  transition: transform 250ms ease-in-out;
+}
+
+.card-container:hover:after,.card-container:active:after, .card-container:focus:after{
+  transform: scaleX(0.75);
 }

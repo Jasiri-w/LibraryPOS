@@ -21,10 +21,10 @@ export default function Home(props) {
       </Head>
 
       <div className={styles.body}>
-        <div className="bg-slate-900 fixed top-0 left-0 h-screen w-20 ">
+        {/**<div className="bg-slate-900 fixed top-0 left-0 h-screen w-20 ">
           <SideBar/>
-        </div>
-        <div className="w-full ml-20">
+  </div>**/}
+        <div className="w-full /**ml-20**/">
           <main className="main-content-container">
             
               <Header />

@@ -15,9 +15,9 @@ const Header = () => {
             {/*<HashtagIcon />*/}
             <Title />
             <ThemeIcon />
-            <Search />
+            {/*<Search />
             <BellIcon />
-            <UserCircle />
+            <UserCircle />*/}
         </div>
     );
 };
@@ -45,6 +45,6 @@ const Search = () => (
 const BellIcon = () => <FaRegBell size='24' className='top-navigation-icon' />;
 const UserCircle = () => <FaUserCircle size='24' className='top-navigation-icon' />;
 const HashtagIcon = () => <FaHashtag size='20' className='title-hashtag' />;
-const Title = () => <h5 className='title-text'>Turi Library</h5>;
+const Title = () => <h5 className='title-text'>Library</h5>;
   
 export default Header;

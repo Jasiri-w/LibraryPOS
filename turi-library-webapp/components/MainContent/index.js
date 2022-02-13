@@ -8,9 +8,9 @@ const MainContent = (props) => {
         <>
             <ExchangeRow db_data={props.db_data} students={props.db_data.students} books={props.db_data.books} />
             {/**<DueBooks  checkouts={checkouts} setCheckout={setCheckout}/>**/}
-            <div className="dashboard-container">
+            {/**<div className="dashboard-container">
                 <AllBooks/>
-            </div>
+    </div>*/}
         </>
     );
 };
@@ -166,13 +166,13 @@ const ExchangeRow = (props) => {
 
     return (
         <div className="dashboard-container justify-center">
-            <form id="exchange_form" onSubmit={handleSubmit}>
+            <form className="split "id="exchange_form" onSubmit={handleSubmit}>
                 <div className="card-container ">
-                    <h1 className="text-center text-black mb-3">Sign Out | Return Book</h1>
-                    <div className="grid grid-cols-2 gap-6">
+                    <h1 className="">Sign Out | Return Book</h1>
+                    <div className="grid grid-cols-2 gap-6" id="book-form-grid">
                         <label className="block">
                             <span className="text-gray-700">Student ID</span>
-                            <input name="student_id" type="text" className="mt-1 block w-full" placeholder="123456789" value={inputs.student_id || ""} onChange={handleChangeStudent}/>
+                            <input name="student_id" type="text" className="field" placeholder="123456789" value={inputs.student_id || ""} onChange={handleChangeStudent}/>
                         </label>
                         <label className="block">
                             <span className="text-gray-700 block">{student_information.holdings.first_name || ""}</span>
@@ -180,15 +180,15 @@ const ExchangeRow = (props) => {
                         </label>
                         <label className="block">
                             <span className="text-gray-700">Book Barcode</span>
-                            <input name="barcode" value={inputs.barcode || ""} onChange={handleChangeBook} type="text" className="mt-1 block w-full" placeholder="123456789"/>
+                            <input name="barcode" value={inputs.barcode || ""} onChange={handleChangeBook} type="text" className="field" placeholder="123456789"/>
                         </label>
                         <label className="block">
                             <span className="text-gray-700">Title</span>
-                            <input name="title" onChange={handleChange} value={inputs.title || ""} type="text" className="mt-1 block w-full" placeholder="Of Mice and Men" />
+                            <input name="title" onChange={handleChange} value={inputs.title || ""} type="text" className="field" placeholder="Of Mice and Men" />
                         </label>
                         <label className="block">
                             <span className="text-gray-700">Author</span>
-                            <input name="author" value={inputs.author || ""} onChange={handleChange} type="text" className="mt-1 block w-full" placeholder="John Steinbeck"/>
+                            <input name="author" value={inputs.author || ""} onChange={handleChange} type="text" className="field" placeholder="John Steinbeck"/>
                         </label>
                         <label className="block">
                             <input type ="submit"></input>
