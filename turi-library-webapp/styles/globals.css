@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+
+
 html,
 body {
   padding: 0;
@@ -21,8 +23,12 @@ a {
 
 @layer base{
   
-  button, input[type="submit"] {
-    @apply bg-emerald-400 focus:ring focus:ring-emerald-500 px-3 py-3 rounded-lg shadow-sm;
+  button, input[type="submit"],input[type="reset"] {
+    @apply bg-emerald-400 focus:ring-emerald-500 border-2
+    px-3 py-3 rounded-lg shadow-sm 
+    hover:bg-white hover:ring-emerald-500 hover:border-emerald-500 
+    hover:rounded-xl
+    dark:text-white dark:border-emerald-500 dark:hover:bg-emerald-400 dark:bg-slate-800;
   }
 }
 
@@ -31,6 +37,15 @@ button:hover, input[type="submit"]:hover {
 }
 
 @layer components{
+
+  .body{
+    @apply
+    flex h-screen w-screen
+    bg-white
+    dark:bg-slate-800 dark:text-slate-400 
+    ;
+  }
+
   .field{
     @apply mt-1 block w-full
     border-emerald-500
@@ -38,7 +53,9 @@ button:hover, input[type="submit"]:hover {
     px-3 py-3
     focus:outline-none focus:ring focus:ring-emerald-500 
    hover:rounded-lg
-   ease-in-out transition-all duration-150;
+   ease-in-out transition-all duration-150
+   
+   dark:text-white dark:bg-slate-800;
   }
 
   .dashboard-container{
@@ -59,7 +76,8 @@ button:hover, input[type="submit"]:hover {
   }
   .card-container > h1 {
     @apply text-4xl  font-bold
-    text-black mb-6;
+    text-black mb-6
+    dark:text-white ;
   }
 
   .split{
@@ -74,10 +92,11 @@ button:hover, input[type="submit"]:hover {
     @apply flex flex-row items-center justify-between 
     bg-opacity-90 
     w-full h-48
-    px-9
-    hover:shadow-lg
-    ease-in-out transition-all duration-150
-    max-h-20;
+    ease-in-out transition-shadow duration-150
+    my-5
+    px-10
+    max-h-24
+    dark:bg-slate-800;
   }
   
   .header-icon {
@@ -98,7 +117,7 @@ button:hover, input[type="submit"]:hover {
   }
 
   .title-text {
-    @apply text-4xl text-emerald-800 tracking-wider font-bold text-opacity-80 
+    @apply text-4xl text-emerald-700 dark:text-emerald-300 tracking-wider font-bold text-opacity-80 
     mr-auto ml-2 my-auto 
     transition duration-300 ease-in-out;
   }
@@ -155,7 +174,42 @@ button:hover, input[type="submit"]:hover {
   }
   
   
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
   
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgba(255,255,255,0); 
+
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888; 
+  border-radius: 20px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
+.header:after {
+  display:block;
+  content: '';
+  margin-top: 2rem;
+  border-bottom: solid 3px #047857;  
+  transform: scaleX(0);  
+  transition: transform 250ms ease-in-out;
+}
+
+.header:hover:after{
+  transform: scaleX(1);
 }
 
 .title-text:after{
@@ -215,10 +269,10 @@ button:hover, input[type="submit"]:hover {
   visibility: visible;
 }
 
-.book-list#allbooks{
+.book-list{
   overflow-x: hidden;
   overflow-y: scroll;
-  max-height: 80%;
+  max-height: 35vh;
 }
 
 .card-container:after {
@@ -233,3 +287,4 @@ button:hover, input[type="submit"]:hover {
 .card-container:hover:after,.card-container:active:after, .card-container:focus:after{
   transform: scaleX(0.75);
 }
+

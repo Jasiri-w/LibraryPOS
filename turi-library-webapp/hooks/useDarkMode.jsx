@@ -7,6 +7,7 @@ const useLocalStorage = (key, initialValue) => {
       return item ? JSON.parse(item) : initialValue;
     } catch (error) {
       console.log(error);
+      console.log(initialValue);
       return initialValue;
     }
   });
@@ -27,7 +28,7 @@ const useLocalStorage = (key, initialValue) => {
 };
 
 const useDarkMode = () => {
-  const [enabled, setEnabled] = useLocalStorage('dark-theme');
+  const [enabled, setEnabled] = useLocalStorage('dark-theme', false);
   const isEnabled = typeof enabledState === 'undefined' && enabled;
 
   useEffect(() => {

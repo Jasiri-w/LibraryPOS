@@ -172,41 +172,48 @@ const ExchangeRow = (props) => {
         }
     }
 
+    const clearInputs = () => {
+        setInputs(values => ({...values, ["student_id"]: ""}));
+        setInputs(values => ({...values, ["barcode"]: ""}));
+        setInputs(values => ({...values, ["title"]: ""}));
+        setInputs(values => ({...values, ["author"]: ""}));
+    }
+
     return (
         <div className="dashboard-container justify-center">
             <form className="split "id="exchange_form" onSubmit={handleSubmit}>
                 <div className="card-container ">
-                    <h1 className="">Sign Out | Return Book</h1>
+                    <h1 className="">Check Out | Return Book</h1>
                     <div className="grid grid-cols-2 gap-6" id="book-form-grid">
                         <label className="block">
-                            <span className="text-gray-700">Student ID</span>
-                            <input name="student_id" type="text" className="field" placeholder="123456789" value={inputs.student_id || ""} onChange={handleChangeStudent}/>
+                            <span className="text-gray-700 dark:text-slate-400">Student ID</span>
+                            <input required name="student_id" type="text" className="field" placeholder="123456789" value={inputs.student_id || ""} onChange={handleChangeStudent}/>
+                        </label>
+                        <label className="block align-middle text-center pt-4">
+                            <span className="text-gray-700 text-2xl font-bold inline-block dark:text-white">{student_information.holdings.first_name || ""}  {student_information.holdings.boarding_house || ""}</span>
                         </label>
                         <label className="block">
-                            <span className="text-gray-700 block">{student_information.holdings.first_name || ""}</span>
-                            <span className="text-gray-700 block">{student_information.holdings.boarding_house || ""}</span>
+                            <span className="text-gray-700 dark:text-slate-400">Book Barcode</span>
+                            <input required name="barcode" value={inputs.barcode || ""} onChange={handleChangeBook} type="text" className="field" placeholder="123456789"/>
                         </label>
                         <label className="block">
-                            <span className="text-gray-700">Book Barcode</span>
-                            <input name="barcode" value={inputs.barcode || ""} onChange={handleChangeBook} type="text" className="field" placeholder="123456789"/>
-                        </label>
-                        <label className="block">
-                            <span className="text-gray-700">Title</span>
+                            <span className="text-gray-700 dark:text-slate-400">Title</span>
                             <input name="title" onChange={handleChange} value={inputs.title || ""} type="text" className="field" placeholder="Of Mice and Men" />
                         </label>
                         <label className="block">
-                            <span className="text-gray-700">Author</span>
+                            <span className="text-gray-700 dark:text-slate-400">Author</span>
                             <input name="author" value={inputs.author || ""} onChange={handleChange} type="text" className="field" placeholder="John Steinbeck"/>
                         </label>
-                        <label className="block">
-                            <input type ="submit" value="Checkout"></input>
-                        </label>
+                        <span className="block align-middle text-right pt-4">
+                            <input type ="submit" value="Checkout" className="mx-2"></input>
+                            <input type ="reset" value="Clear" className="mx-2" onClick={clearInputs}></input>
+                        </span>
                     </div>
                 </div>
             </form>
             <div className="split flex-col">
                 <div className="card-container">
-                    <h1 className="text-center text-8xl text-black">Books Signed Out</h1>
+                    <h1 className="text-center text-8xl text-black">Books Checked Out ({checkouts.length})</h1>
                     <div className="book-list mx-auto">
                         <ol>
                             {

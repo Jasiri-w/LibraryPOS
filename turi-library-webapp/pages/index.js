@@ -20,7 +20,7 @@ export default function Home(props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className={styles.body}>
+      <div className="body">
         {/**<div className="bg-slate-900 fixed top-0 left-0 h-screen w-20 ">
           <SideBar/>
   </div>**/}

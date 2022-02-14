@@ -7,12 +7,14 @@ import {
     FaSun,
   } from 'react-icons/fa';
   import useDarkMode from '../../hooks/useDarkMode';
+  import Image from 'next/image';
   
 
 const Header = () => {
     return (
         <div className='header'>
             {/*<HashtagIcon />*/}
+            <div className=""><Logo/></div>
             <Title />
             <ThemeIcon />
             {/*<Search />
@@ -45,6 +47,7 @@ const Search = () => (
 const BellIcon = () => <FaRegBell size='24' className='top-navigation-icon' />;
 const UserCircle = () => <FaUserCircle size='24' className='top-navigation-icon' />;
 const HashtagIcon = () => <FaHashtag size='20' className='title-hashtag' />;
+const Logo = () => <img src="/logo.png" className="static responsive" style={{ maxHeight: '4em'}}/>;
 const Title = () => <h5 className='title-text'>Library</h5>;
   
 export default Header;
