@@ -47,7 +47,7 @@ const Search = () => (
 const BellIcon = () => <FaRegBell size='24' className='top-navigation-icon' />;
 const UserCircle = () => <FaUserCircle size='24' className='top-navigation-icon' />;
 const HashtagIcon = () => <FaHashtag size='20' className='title-hashtag' />;
-const Logo = () => <img src="/logo.png" className="static responsive" style={{ maxHeight: '4em'}}/>;
+const Logo = () => <picture><img src="/logo.png" className="static responsive" style={{ maxHeight: '4em'}}/></picture>;
 const Title = () => <h5 className='title-text'>Library</h5>;
   
 export default Header;

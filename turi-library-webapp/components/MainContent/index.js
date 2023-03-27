@@ -219,7 +219,7 @@ const ExchangeRow = (props) => {
                             {
                                 checkouts.map(check =>{
                                     return(
-                                        <li class="checkout-elem" onClick={handleDelete} id={check.id} key={check.id}> {check.Student.first_name} {check.Student.last_name} - {check.Book.title} by {check.Book.author} - Since {dateify(check.checkout_date)} </li>
+                                        <li className="checkout-elem" onClick={handleDelete} id={check.id} key={check.id}> {check.Student.first_name} {check.Student.last_name} - {check.Book.title} by {check.Book.author} - Since {dateify(check.checkout_date)} </li>
                                     );
                                 })
                             }
