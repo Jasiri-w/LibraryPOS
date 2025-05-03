@@ -41,9 +41,9 @@ const FullScreenNavigation = () => {
             </div>
             <div className='text-4xl full-screen-navigation-content w-[20%] h-[80%] mx-auto mt-40'>
                 <ul className='full-screen-navigation-list m-auto text-center'>
-                    <li><Link href="/"><a>Home</a></Link></li>
-                    <li><Link href="/all-books"><a>Browse Full Library Catalog</a></Link></li>
-                    <li><Link href="/all-books#search-section"><a><FaSearch size='20' className='search-icon' />Search</a></Link></li>
+                    <li><Link href="/">Home</Link></li>
+                    <li><Link href="/all-books">Browse Full Library Catalog</Link></li>
+                    <li><Link href="/all-books#search-section"><FaSearch size='20' className='search-icon' />Search</Link></li>
                 </ul>
             </div>
         </div>
@@ -89,6 +89,6 @@ const BellIcon = () => <FaRegBell size='24' className='top-navigation-icon' />;
 const UserCircle = () => <FaUserCircle size='24' className='top-navigation-icon' />;
 const HashtagIcon = () => <FaHashtag size='20' className='title-hashtag' />;
 const Logo = () => <picture><img src="/logo.png" className="static responsive" style={{ maxHeight: '4em'}}/></picture>;
-const Title = () => <h5 className='title-text'><Link href="\"><a>Library</a></Link></h5>;
+const Title = () => <h5 className='title-text'><Link href="\">Library</Link></h5>;
   
 export default Header;

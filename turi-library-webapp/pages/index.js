@@ -7,7 +7,7 @@ import MainContent from '../components/MainContent';
 import Header from '../components/Header';
 import SideBar from '../components/SideBar';
 
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../prisma/client'
 import { Analytics } from "@vercel/analytics/react"
 
 import superjson from 'superjson';
@@ -47,7 +47,6 @@ export default function Home(props) {
 // books without refresh in the form. We have to use hooks to data bind the portrayed checkout list 
 // while still updating the database as fast as possible with as few refreshes as possible.
 export async function getServerSideProps() {
-  const prisma = new PrismaClient();
   const checkouts = await prisma.checkout.findMany({
     include: {
       Student: true,

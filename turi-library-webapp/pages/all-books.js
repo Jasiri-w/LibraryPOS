@@ -1,5 +1,5 @@
 import Header from '../components/Header';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../prisma/client'
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -97,13 +97,11 @@ export default function AllBooks({ books, bookAvailability, bookRequests }) {
                     }}
                     onClick={() => router.push(`/book/${book.id}`)}
                   >
-                    <Link href={`/book/${book.id}`}>
-                      <a className="block p-4 transition duration-300 ease-in-out hover:bg-white/30 hover:backdrop-blur-xs rounded-lg dark:text-white">
+                    <Link className="block p-4 transition duration-300 ease-in-out hover:bg-white/30 hover:backdrop-blur-xs rounded-lg dark:text-white" href={`/book/${book.id}`}>
                         <strong>{book.title}</strong> by {book.author} (ISBN: {book.isbn}, Format: {book.format})
                         <span className="availability-tooltip">
                           {bookAvailability[book.id]} copy(ies) available
                         </span>
-                      </a>
                     </Link>
                   </li>
                 ))}
@@ -203,7 +201,6 @@ export default function AllBooks({ books, bookAvailability, bookRequests }) {
 }
 
 export async function getServerSideProps() {
-  const prisma = new PrismaClient();
 
   // Fetch all books and their copies
   const books = await prisma.book.findMany({

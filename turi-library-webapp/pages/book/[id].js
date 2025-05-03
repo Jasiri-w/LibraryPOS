@@ -1,5 +1,5 @@
 import Header from '../../components/Header';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '../../prisma/client'
 import { useRouter } from 'next/router';
 import { Image } from 'next/image';
 
@@ -64,7 +64,6 @@ export default function BookDetails({ book, total_copies, available_copies }) {
 
 export async function getServerSideProps(context) {
     const { id } = context.params; // Access the dynamic route parameter directly
-    const prisma = new PrismaClient();
 
     // Fetch the book details by ID
     const book = await prisma.book.findUnique({
