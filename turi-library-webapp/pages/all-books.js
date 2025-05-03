@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import Image from 'next/image';
 
 export default function AllBooks({ books, bookAvailability, bookRequests }) {
   const router = useRouter();
@@ -136,16 +137,18 @@ export default function AllBooks({ books, bookAvailability, bookRequests }) {
                       <li key={index} className="my-2 p-4 border rounded shadow flex justify-between search-result-item dark:text-white mx-auto transition duration-300 ease-in-out hover:bg-black/20 hover:backdrop-blur-xs dark:hover:bg-white/50 dark:hover:backdrop-blur-xs">
                         <span className='flex'>
                           {/* Book Cover Image */}
-                          <img
+                          <Image
                             src={`https://covers.openlibrary.org/b/id/${result.cover_i}-M.jpg`}
                             alt={`${result.title} cover`}
+                            width={96} // Adjust width as needed
+                            height={96} // Adjust height as needed
                             className="w-24 h-24 rounded-md mr-4 float-left"
                             onError={(e) => (e.target.style.display = 'none')} // Hide image if not found
                           />
                           {/* Book Details */}
                           <span className="my-auto">
                             {/* Book Title and Author */}
-                            <strong>{result.title}</strong> by {result.author_name?.join(', ') || 'Unknown Author'}
+                            <strong>{result.title}</strong> by {result.author_name?.join(', ') || 'Unknown Author&apos;s'}
                             <span className="ml-2 italic text-blue-500 transition-all duration-300 ease-in transition-delay-100 hover:ml-4">
                               <a
                                 href={`https://openlibrary.org${result.key}`}

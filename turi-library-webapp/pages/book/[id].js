@@ -1,6 +1,7 @@
 import Header from '../../components/Header';
 import { PrismaClient } from '@prisma/client';
 import { useRouter } from 'next/router';
+import { Image } from 'next/image';
 
 export default function BookDetails({ book, total_copies, available_copies }) {
   return (
