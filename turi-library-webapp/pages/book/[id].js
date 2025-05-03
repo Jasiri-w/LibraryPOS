@@ -39,9 +39,9 @@ export default function BookDetails({ book, total_copies, available_copies }) {
               {/* <p className="text-lg mb-2">
                 <strong>Published:</strong> {book.published_date}
               </p> */}
-              {/* <p className="text-lg">
-                <strong>Description:</strong> {book.description || 'No description available.'}
-              </p> */}
+              <p className="text-lg">
+                <strong>Description:</strong> {book.description || &apos;No description available.&apos;}
+              </p>
             </div>
           </div>
         </div>
@@ -81,7 +81,7 @@ export async function getServerSideProps(context) {
     }
 
     const total_copies = book.Copies.length;
-    const available_copies = book.Copies.filter((copy) => copy.status === 'Available').length;
+    const available_copies = book.Copies.filter((copy) => copy.status === "Available").length;
 
     return {
         props: {
