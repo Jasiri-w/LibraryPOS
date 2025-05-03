@@ -85,7 +85,7 @@ export default function AllBooks({ books, bookAvailability, bookRequests }) {
           <div className="content dark:bg-slate-800 mt-8">
             {/* Section for Exploring Books in the Library */}
             <h1 className=" text-center text-5xl font-bold mb-4 dark:text-white">Explore</h1>
-            <h2 className=" text-center text-1xl font-bold mb-4 dark:text-slate-500">Browse everything in your library's catalog!</h2>
+            <h2 className=" text-center text-1xl font-bold mb-4 dark:text-slate-500">Browse everything in your library&apos;s catalog!</h2>
             <div className="all-book-list mx-auto  mt-4 mb-8 mx-5" >
               <ul>
                 {books.map((book) => (

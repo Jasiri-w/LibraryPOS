@@ -40,7 +40,7 @@ export default function BookDetails({ book, total_copies, available_copies }) {
                 <strong>Published:</strong> {book.published_date}
               </p> */}
               <p className="text-lg">
-                <strong>Description:</strong> {book.description || &apos;No description available.&apos;}
+                <strong>Description:</strong> {book.description || 'No description available.'}
               </p>
             </div>
           </div>
