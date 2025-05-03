@@ -162,7 +162,7 @@ export default function AllBooks({ books, bookAvailability, bookRequests }) {
                         </span>
                         <div className='my-auto'>
                           {isBookInLibrary(result.title, result.author_name?.[0]) ? (
-                            <span className="text-green-500">It's already in our library!</span>
+                            <span className="text-green-500">It&apos;s already in our library!</span>
                           ) : isBookAlreadyRequested(result.title, result.author_name?.[0], result.key.split('/')[1]) ? (
                             <span className="text-yellow-500">This has already been requested!</span>
                           ) : (
