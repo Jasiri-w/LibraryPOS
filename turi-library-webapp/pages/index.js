@@ -15,7 +15,7 @@ export default function Home(props) {
   return (
     <div className={styles.container}>
       <Head>
-        <title>Turi Library Web App</title>
+        <title>Library Dashboard : Read!</title>
         <meta name="description" content="oip" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -24,11 +24,11 @@ export default function Home(props) {
         {/**<div className="bg-slate-900 fixed top-0 left-0 h-screen w-20 ">
           <SideBar/>
   </div>**/}
-        <div className="w-full /**ml-20**/">
+        <div className="w-full home-container">
           <main className="main-content-container">
             
               <Header />
-            <MainContent message="bitch" db_data={props.db_data}/>
+            <MainContent message="man" db_data={props.db_data}/>
           </main>
         </div>
       </div>
@@ -50,8 +50,12 @@ export async function getServerSideProps() {
   const checkouts = await prisma.checkout.findMany({
     include: {
       Student: true,
-      Book: true,
-    }
+      BookCopy: {
+        include: {
+          Book: true,
+        },
+      },
+    },
   });
   const returns = await prisma.return.findMany();
   
@@ -73,7 +77,11 @@ export async function getServerSideProps() {
     checkouts: ser_checkouts,
     returns: ser_returns,
     students: await prisma.student.findMany(),
-    books: await prisma.book.findMany(),
+    books: await prisma.book.findMany({
+      include: {
+        Copies: true,
+      },
+    }),
   }
 
   /*for(var x = 0; x < ser_checkouts.length; x++){

@@ -1,5 +1,5 @@
-
 import { useState } from 'react';
+import Link from 'next/link';
 
 import DueBooks from '../DueBooks';
 
@@ -37,6 +37,10 @@ const ExchangeRow = (props) => {
                 title: "",
                 author: "",
                 barcode: "",
+                isbn: "",
+                format: "",
+                total_copies: 0,
+                available_copies: 0,
             },
         })
 
@@ -67,25 +71,68 @@ const ExchangeRow = (props) => {
     
     const handleChangeBook = (event) => {
         const name = event.target.name;
-        const barcode = event.target.value;
-        setInputs(values => ({...values, [name]: barcode}));
+        const value = event.target.value;
+        setInputs((values) => ({ ...values, [name]: value }));
 
-        var holdings = {}
-        for(var x=0;x<books.length;x++){
-            if(books[x].barcode==barcode){
-                holdings=books[x];
-                break;
-            }
-        }
-        console.log(holdings)
-
+        if (name === "barcode") {
+            // Find the BookCopy by barcode
+            const bookCopy = books
+                .flatMap((book) => book.Copies || []) // Ensure Copies is an array
+                .find((copy) => copy.barcode === value);
         
 
-        setInputs(values => ({...values, ["author"]: holdings.author}));
-        setInputs(values => ({...values, ["title"]: holdings.title}));
-        setBookInformation(values => ({holdings}));
+            if (bookCopy) {
+                // Populate title and author based on the BookCopy's bookId
+                const book = books.find((b) => b.id === bookCopy.bookId);
+                if (book) {
+                    setInputs((values) => ({
+                        ...values,
+                        title: book.title,
+                        author: book.author,
+                    }));
+                    const availableCount = book.Copies.filter((copy) => copy.status.toLowerCase() === "available").length;
+                    const totalCount = book.Copies.length;
+                    setBookInformation({ holdings: { ...bookCopy, title: book.title, author: book.author, isbn: book.isbn, format: book.format, total_copies: totalCount, available_copies: availableCount} });
+                }
+            } else {
+                console.log("No matching barcode found.");
+            }
+        }
+    };
 
-    }
+    const handleChangeTitle = (event) => {
+        const name = event.target.name;
+        const value = event.target.value;
+        setInputs((values) => ({ ...values, [name]: value }));
+
+        if (name === "title") {
+            // Find the Book by title
+            const book = books.find((b) => b.title.toLowerCase() === value.toLowerCase());
+
+            if (book) {
+                // Populate author
+                setInputs((values) => ({
+                    ...values,
+                    author: book.author,
+                }));
+
+                // Find the first available BookCopy
+                const availableCopy = book.Copies.find((copy) => copy.status.toLowerCase() === "available");
+
+                if (availableCopy) {
+                    setInputs((values) => ({
+                        ...values,
+                        barcode: availableCopy.barcode,
+                    }));
+                    setBookInformation({ holdings: { ...availableCopy, title: book.title, author: book.author } });
+                } else {
+                    console.log("All copies are currently checked out.");
+                }
+            } else {
+                console.log("No matching book found.");
+            }
+        }
+    };
 
     const handleChange = (event) => {
         const name = event.target.name;
@@ -107,33 +154,60 @@ const ExchangeRow = (props) => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        /** Unnecessary but alot of good work i might need later
-         * const formData = new FormData(event.target);
-         * var student_id = formData.get('student_id');
-         * var book_id = formData.get('barcode'); **/
+
         const formData = new FormData(event.target);
         var student_id = formData.get('student_id');
+        var available_copy = books.find((b) => b.id === book_information.holdings.id).Copies.find((copy) => copy.status.toLowerCase() === "available");
+
+        if (!available_copy) {
+            console.log("No available copy found for this book.");
+            return; // Exit early if no available copy is found
+        }
 
         const new_checkout = {
-            student_id: student_information.holdings.id,
-            book_id: book_information.holdings.id,
-        }
-        try{
+            Student: {
+                connect: { id: student_information.holdings.id }, // Connect the checkout to the existing Student
+            },
+            BookCopy: {
+                connect: { id: available_copy.id }, // Connect the checkout to the available BookCopy
+            },
+        };
+
+        console.log("Form Submitted");
+        console.log("New Checkout:", new_checkout);
+
+        try {
             const saved = await saveCheckout(new_checkout);
+
+            // Add the new checkout to the frontend state with the correct structure
             const new_checkout_frontend = {
-                ///id:  String.fromCharCode(65 + Math.floor(Math.random() * 26)) + Date.now(),
-                id:  parseInt(saved.id),
+                id: parseInt(saved.id),
                 Student: {
-                    first_name: student_information.holdings.first_name, 
-                    last_name: student_information.holdings.last_name, 
+                    first_name: student_information.holdings.first_name,
+                    last_name: student_information.holdings.last_name,
                 },
-                Book: {
-                    title: book_information.holdings.title,
-                    author: book_information.holdings.author,
-                }
-            }
+                BookCopy: {
+                    Book: {
+                        title: book_information.holdings.title,
+                        author: book_information.holdings.author,
+                    },
+                },
+                checkout_date: new Date().toISOString(), // Add the current date as the checkout date
+            };
+
             event.target.reset();
             setCheckout(checkouts.concat(new_checkout_frontend));
+            setBookInformation((prev) => {
+                return {
+                    ...prev,
+                    holdings: {
+                        ...prev.holdings,
+                        available_copies: (prev.holdings.available_copies || 0) - 1,
+                    },
+                };
+            });
+            console.log("Number of available copies reduced:", book_information.holdings.available_copies);
+            console.log("Book Information:", book_information);
             event.target.querySelector("input[name='student_id']").value = student_id;
             event.target.querySelector("input[name='student_id']").focus();
         } catch (err) {
@@ -154,15 +228,31 @@ const ExchangeRow = (props) => {
     }
 
     const handleDelete = async (event) => {
-        var checkout_id = event.target.id;
-        try{
+        const checkout_id = event.target.id;
+
+        try {
             const deleted = await deleteCheckout(checkout_id);
-            //change frontend list of checkouts
-            setCheckout(checkouts.filter(record => record.id !== deleted.id));
+
+            // Update the checkouts state by removing the deleted checkout
+            setCheckout(checkouts.filter(record => record.id !== parseInt(checkout_id)));
+
+            // Update the available copies count for the corresponding book
+            setBookInformation((prev) => {
+                if (deleted.BookCopy && prev.holdings.id === deleted.BookCopy.bookId) {
+                    return {
+                        ...prev,
+                        holdings: {
+                            ...prev.holdings,
+                            available_copies: prev.holdings.available_copies + 1,
+                        },
+                    };
+                }
+                return prev;
+            });
         } catch (err) {
             console.log(err);
         }
-    }
+    };
 
     const dateify = (date) => {
         if(date == undefined){
@@ -173,62 +263,91 @@ const ExchangeRow = (props) => {
     }
 
     const clearInputs = () => {
-        setInputs(values => ({...values, ["student_id"]: ""}));
+        //setInputs(values => ({...values, ["student_id"]: ""}));
         setInputs(values => ({...values, ["barcode"]: ""}));
         setInputs(values => ({...values, ["title"]: ""}));
         setInputs(values => ({...values, ["author"]: ""}));
     }
 
+    //console.log("Books:", books);
+    console.log("Checkouts:", checkouts);
+
     return (
-        <div className="dashboard-container justify-center">
-            <form className="split "id="exchange_form" onSubmit={handleSubmit}>
-                <div className="card-container ">
-                    <h1 className="">Check Out | Return Book</h1>
-                    <div className="grid grid-cols-2 gap-6" id="book-form-grid">
-                        <label className="block">
-                            <span className="text-gray-700 dark:text-slate-400">Student ID</span>
-                            <input required name="student_id" type="text" className="field" placeholder="123456789" value={inputs.student_id || ""} onChange={handleChangeStudent}/>
-                        </label>
-                        <label className="block align-middle text-center pt-4">
-                            <span className="text-gray-700 text-2xl font-bold inline-block dark:text-white">{student_information.holdings.first_name || ""}  {student_information.holdings.boarding_house || ""}</span>
-                        </label>
-                        <label className="block">
-                            <span className="text-gray-700 dark:text-slate-400">Book Barcode</span>
-                            <input required name="barcode" value={inputs.barcode || ""} onChange={handleChangeBook} type="text" className="field" placeholder="123456789"/>
-                        </label>
-                        <label className="block">
-                            <span className="text-gray-700 dark:text-slate-400">Title</span>
-                            <input name="title" onChange={handleChange} value={inputs.title || ""} type="text" className="field" placeholder="Of Mice and Men" />
-                        </label>
-                        <label className="block">
-                            <span className="text-gray-700 dark:text-slate-400">Author</span>
-                            <input name="author" value={inputs.author || ""} onChange={handleChange} type="text" className="field" placeholder="John Steinbeck"/>
-                        </label>
-                        <span className="block align-middle text-right pt-4">
-                            <input type ="submit" value="Checkout" className="mx-2"></input>
-                            <input type ="reset" value="Clear" className="mx-2" onClick={clearInputs}></input>
-                        </span>
+        <div className=" ">
+            <div className="dashboard-container justify-center">
+                <form className="split "id="exchange_form" onSubmit={handleSubmit}>
+                    <div className="card-container ">
+                        <h1 className="">Check Out | Return Book</h1>
+                        <div className="grid grid-cols-2 gap-6" id="book-form-grid">
+                            <label className="block">
+                                <span className="text-gray-700 dark:text-slate-400">Student ID</span>
+                                <input required name="student_id" type="text" className="field" placeholder="123456789" value={inputs.student_id || ""} onChange={handleChangeStudent}/>
+                            </label>
+                            <label className="block my-auto text-center pt-4">
+                                <span className="text-gray-700 text-2xl font-bold inline-block dark:text-white">{student_information.holdings.first_name || ""} {student_information.holdings.boarding_house || ""}</span>
+                            </label>
+                            <label className="block">
+                                <span className="text-gray-700 dark:text-slate-400">Book Barcode</span>
+                                <input required name="barcode" value={inputs.barcode || ""} onChange={handleChangeBook} type="text" className="field" placeholder="123456789"/>
+                            </label>
+                            <label className="block">
+                                <span className="text-gray-700 dark:text-slate-400">Title</span>
+                                <input name="title" onChange={handleChange} value={inputs.title || ""} type="text" className="field" placeholder="Of Mice and Men" />
+                            </label>
+                            <label className="block">
+                                <span className="text-gray-700 dark:text-slate-400">Author</span>
+                                <input name="author" value={inputs.author || ""} onChange={handleChange} type="text" className="field" placeholder="John Steinbeck"/>
+                            </label>
+                            <span className="block align-middle text-right pt-4">
+                                <input type ="submit" value="Checkout" className="mx-2"></input>
+                                <input type ="reset" value="Clear" className="mx-2" onClick={clearInputs}></input>
+                            </span>
+                        </div>
                     </div>
-                </div>
-            </form>
-            <div className="split flex-col">
-                <div className="card-container">
-                    <h1 className="text-center text-8xl text-black">Books Checked Out ({checkouts.length})</h1>
-                    <div className="book-list mx-auto">
-                        <ol>
-                            {
-                                checkouts.map(check =>{
-                                    return(
-                                        <li className="checkout-elem" onClick={handleDelete} id={check.id} key={check.id}> {check.Student.first_name} {check.Student.last_name} - {check.Book.title} by {check.Book.author} - Since {dateify(check.checkout_date)} </li>
-                                    );
-                                })
-                            }
-                        </ol>
+                </form>
+                <div className="split card-container flex justify-between book-info-home">
+                    <div className="">
+                            <h2 className="text-2xl font-bold mb-4">{book_information.holdings.title}</h2>
+                        <p className="text-lg mb-2">
+                            <strong>Author:</strong> {book_information.holdings.author}
+                        </p>
+                        <p className="text-lg mb-2">
+                            <strong>ISBN:</strong> {book_information.holdings.isbn} 
+                        </p>
+                        <p className="text-lg mb-2">
+                            <strong>Format:</strong> {book_information.holdings.format}
+                        </p>
+                        <p className="text-lg mb-2">
+                            <strong>Available Copies:</strong> {book_information.holdings.available_copies} / {book_information.holdings.total_copies} 
+                        </p>
                     </div>
+                    <img style={{ display : book_information.holdings.isbn !== "" ? 'block' : 'none'}} className='rounded-lg  object-cover' src={book_information.holdings.isbn !== "" ? `https://covers.openlibrary.org/b/isbn/${book_information.holdings.isbn}-M.jpg` : ""}/>
                 </div>
-                <div className="link-container">
-                    <p className="link">All Books</p>
-                    <p className="link">Checkout Log</p>
+            </div>
+            <div>
+                <div className="flex-col">
+                    <div className="card-container">
+                        <h1 className="text-center text-8xl text-black">Books Checked Out ({checkouts.length})</h1>
+                        <div className="book-list mx-auto">
+                            <ol>
+                                {
+                                    checkouts.length === 0 ? <li className="text-center">No books checked out! Happy Reading!</li> :
+                                    checkouts.map(check =>{
+                                        console.log("Check:", check);
+                                        return(
+                                            <li className="checkout-elem" onClick={handleDelete} id={check.id} key={check.id}> {check.Student.first_name} {check.Student.last_name} - {check.BookCopy.Book.title} by {check.BookCopy.Book.author} - Since {dateify(check.checkout_date)} </li>
+                                        );
+                                    })
+                                }
+                            </ol>
+                        </div>
+                    </div>
+                    <div className="link-container">
+                        <Link href="/all-books">
+                            <a className="link">All Books</a>
+                        </Link>
+                        <p className="link">Checkout Log</p>
+                    </div>
                 </div>
             </div>
         </div>

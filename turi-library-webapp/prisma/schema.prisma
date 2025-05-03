@@ -1,17 +1,14 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
-//  provider          = "postgresql"
-//  url               = "file:./dev.db"
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider          = "postgresql"
-  url               = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
-
 
 model Student {
   id             Int        @id @default(autoincrement())
@@ -22,36 +19,59 @@ model Student {
   gender         String
   Checkout       Checkout[]
   Returns        Return[]
+  BookRequests   BookRequest[]
 }
 
 model Checkout {
-  id            Int      @id @default(autoincrement())
-  book_id       Int
+  id            Int       @id @default(autoincrement())
+  copy_id       Int
   student_id    Int
-  checkout_date DateTime @default(now())
-  Book          Book     @relation(fields: [book_id], references: [id])
-  Student       Student  @relation(fields: [student_id], references: [id])
+  checkout_date DateTime  @default(now())
+
+  BookCopy      BookCopy  @relation(fields: [copy_id], references: [id])
+  Student       Student   @relation(fields: [student_id], references: [id])
 }
 
 model Return {
-  id            Int      @id @default(autoincrement())
-  book_id       Int
+  id            Int       @id @default(autoincrement())
+  copy_id       Int
   student_id    Int
   checkout_date DateTime
-  return_date   DateTime @default(now())
-  Book          Book     @relation(fields: [book_id], references: [id])
-  Student       Student  @relation(fields: [student_id], references: [id])
+  return_date   DateTime  @default(now())
+
+  BookCopy      BookCopy  @relation(fields: [copy_id], references: [id])
+  Student       Student   @relation(fields: [student_id], references: [id])
 }
 
 model Book {
-  id        Int        @id @default(autoincrement())
-  barcode   Int
+  id        Int         @id @default(autoincrement())
+  isbn      String
   title     String
   author    String
-  class     String
-  media     String
-  URL       String
-  returned  Boolean    @default(true)
-  Checkouts Checkout[]
-  Returns   Return[]
+  format    String
+  Copies    BookCopy[]
+}
+
+model BookCopy {
+  id         Int        @id @default(autoincrement())
+  bookId     Int
+  barcode    String     @unique
+  status     String     // e.g., 'Available', 'Checked Out', 'Lost'
+  location   String?    // optional: shelf, branch
+
+  Book       Book       @relation(fields: [bookId], references: [id])
+  Checkouts  Checkout[]
+  Returns    Return[]
+}
+
+model BookRequest {
+  id        Int       @id @default(autoincrement())
+  olid      String
+  title     String
+  author    String
+  studentId Int?
+  status    String    @default("Pending") // e.g., 'Pending', 'Approved', 'Rejected'
+  requestDate DateTime @default(now())
+
+  Student   Student?   @relation(fields: [studentId], references: [id])
 }
