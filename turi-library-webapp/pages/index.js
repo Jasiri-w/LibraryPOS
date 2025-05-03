@@ -8,6 +8,7 @@ import Header from '../components/Header';
 import SideBar from '../components/SideBar';
 
 import { PrismaClient } from '@prisma/client';
+import { Analytics } from "@vercel/analytics/react"
 
 import superjson from 'superjson';
 
