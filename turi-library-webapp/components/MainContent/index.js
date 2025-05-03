@@ -343,8 +343,8 @@ const ExchangeRow = (props) => {
                         </div>
                     </div>
                     <div className="link-container">
-                        <Link href="/all-books">
-                            <a className="link">All Books</a>
+                        <Link href="/all-books" className="link">
+                            All Books
                         </Link>
                         <p className="link">Checkout Log</p>
                     </div>

@@ -43,11 +43,11 @@ const FullScreenNavigation = () => {
                 <ul className='full-screen-navigation-list m-auto text-center'>
                     <li><Link href="/">Home</Link></li>
                     <li><Link href="/all-books">Browse Full Library Catalog</Link></li>
-                    <li><Link href="/all-books#search-section"><FaSearch size='20' className='search-icon' />Search</Link></li>
+                    <li><Link href="/all-books#search-section" legacyBehavior><FaSearch size='20' className='search-icon' />Search</Link></li>
                 </ul>
             </div>
         </div>
-    )
+    );
 }
 
 const ToggleNavigation = () => {

@@ -97,7 +97,10 @@ export default function AllBooks({ books, bookAvailability, bookRequests }) {
                     }}
                     onClick={() => router.push(`/book/${book.id}`)}
                   >
-                    <Link className="block p-4 transition duration-300 ease-in-out hover:bg-white/30 hover:backdrop-blur-xs rounded-lg dark:text-white" href={`/book/${book.id}`}>
+                    <Link
+                      className="block p-4 transition duration-300 ease-in-out hover:bg-white/30 hover:backdrop-blur-xs rounded-lg dark:text-white"
+                      href={`/book/${book.id}`}
+                      legacyBehavior>
                         <strong>{book.title}</strong> by {book.author} (ISBN: {book.isbn}, Format: {book.format})
                         <span className="availability-tooltip">
                           {bookAvailability[book.id]} copy(ies) available
