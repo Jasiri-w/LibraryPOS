@@ -94,6 +94,7 @@ export async function getServerSideProps() {
   console.table(ser_checkouts);
   console.log("Checkouts Rawdogged");
   console.table(checkouts);*/
+  await prisma.$disconnect();
   return{
     props:{
         hello: "Jasiri",

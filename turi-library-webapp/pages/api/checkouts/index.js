@@ -1,4 +1,4 @@
-import { prisma } from '../../../prisma/client'
+import { prisma } from '../../../prisma/client';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -20,12 +20,11 @@ export default async function handler(req, res) {
     if (!bookCopy || bookCopy.status.toLowerCase() !== "available") {
       const status = bookCopy?.status ?? "N/A";
       const message = `The book is not available for checkout. (bookCopy: ${JSON.stringify(bookCopy)}, status: ${status})`;
-    
+
       console.error(message); // ✅ for logs
       res.status(400).json({ error: message }); // ✅ for frontend alert display
       return;
     }
-    
 
     // Create the new checkout entry
     const savedCheckout = await prisma.checkout.create({
@@ -42,5 +41,8 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error("Error creating checkout or updating BookCopy:", error);
     res.status(500).json({ error: "An error occurred while processing the request." });
+  } finally {
+    // Ensure Prisma disconnects in all cases
+    await prisma.$disconnect();
   }
-};
+}

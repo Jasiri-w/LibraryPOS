@@ -61,5 +61,7 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error('Error processing return:', error);
     res.status(500).json({ error: 'An error occurred while processing the return.' });
+  }finally{
+    await prisma.$disconnect();
   }
 };
