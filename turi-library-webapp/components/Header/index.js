@@ -37,13 +37,15 @@ const FullScreenNavigation = () => {
     return (
         <div className='text-white transition-all transition-duration-150 ease-in-out full-screen-navigation w-screen h-screen z-9999 bg-black/50 backdrop-blur-md nav'>
             <div className='full-screen-navigation-close' onClick={toggleNavigation}>
-                <span>&#10006;</span>
+                <span title="Close Nav">&#10006;</span>
             </div>
-            <div className='text-4xl full-screen-navigation-content w-[20%] h-[80%] mx-auto mt-40'>
+            <div className='text-4xl full-screen-navigation-content md:w-[20%] h-[80%] mx-auto mt-40'>
                 <ul className='full-screen-navigation-list m-auto text-center'>
                     <li><Link href="/">Home</Link></li>
-                    <li><Link href="/all-books">Browse Full Library Catalog</Link></li>
                     <li><FaSearch size='20' className='search-icon' /><Link href="/all-books#search-section" legacyBehavior>Search</Link></li>
+                    <li><Link href="/all-books">Browse Full Library Catalog</Link></li>
+                    <hr className="my-4" />
+                    
                 </ul>
             </div>
         </div>
@@ -59,7 +61,7 @@ const ToggleNavigation = () => {
     return (
         <div className='toggle-navigation ml-5' onClick={toggleNavigation}>
             <div className='toggle-navigation-icon'>
-                <span style={{fontSize : "30px", cursor: "pointer"}}>&#9776;</span>
+                <span title="Open Nav" style={{fontSize : "30px", cursor: "pointer"}}>&#9776;</span>
             </div>
         </div>
     );
@@ -71,9 +73,9 @@ const ThemeIcon = () => {
     return (
         <span onClick={handleMode}>
         {darkTheme ? (
-            <FaSun size='24' className='top-navigation-icon' />
+            <FaSun size='24' className='top-navigation-icon' title="Light Mode" />
         ) : (
-            <FaMoon size='24' className='top-navigation-icon' />
+            <FaMoon size='24' className='top-navigation-icon' title="Dark Mode" />
         )}
         </span>
     );

@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import Image from 'next/image';
+import Head from 'next/head';
 
 export default function AllBooks({ books, bookAvailability, bookRequests }) {
   const router = useRouter();
@@ -71,7 +72,17 @@ export default function AllBooks({ books, bookAvailability, bookRequests }) {
     );
   };
 
-  const isBookAlreadyRequested = (title, author, olid) => {
+  const isBookAlreadyRequested = (title, author, olid, result) => {
+    if(typeof author === "undefined"){
+      author = 'Unknown Author';
+      console.log(result);
+    }
+    
+    
+    console.log('Checking if book is already requested:', title, ' | author: ', author,' | olid: ', olid);
+    if(bookRequests.some((book) => book.title.toLowerCase() === title.toLowerCase() && book.author.toLowerCase() === author.toLowerCase() && book.olid === olid)){
+      console.log('Book already requested:', title, author, olid);
+    }
     return bookRequests.some(
       (book) => book.title.toLowerCase() === title.toLowerCase() && book.author.toLowerCase() === author.toLowerCase() && book.olid === olid
     );
@@ -79,6 +90,11 @@ export default function AllBooks({ books, bookAvailability, bookRequests }) {
 
   return (
     <div>
+      <Head>
+        <title>All Books - Turi Library</title>
+        <meta name="description" content="Explore all books in the Turi Library catalog." />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <div className="bg-white dark:bg-slate-800 dark:text-slate-400 pt-10 ;">
         <div className='w-full'>
           <Header />
@@ -166,7 +182,7 @@ export default function AllBooks({ books, bookAvailability, bookRequests }) {
                         <div className='my-auto'>
                           {isBookInLibrary(result.title, result.author_name?.[0]) ? (
                             <span className="text-green-500">It&apos;s already in our library!</span>
-                          ) : isBookAlreadyRequested(result.title, result.author_name?.[0], result.key.split('/')[1]) ? (
+                          ) : isBookAlreadyRequested(result.title, result.author_name?.[0], result.key.split('/')[2], result) ? (
                             <span className="text-yellow-500">This has already been requested!</span>
                           ) : (
                             <button

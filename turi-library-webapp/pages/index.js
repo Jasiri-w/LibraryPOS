@@ -97,7 +97,6 @@ export async function getServerSideProps() {
   await prisma.$disconnect();
   return{
     props:{
-        hello: "Jasiri",
         db_data: database_data,
     }
   }

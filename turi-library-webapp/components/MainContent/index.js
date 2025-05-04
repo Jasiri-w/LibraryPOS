@@ -317,9 +317,14 @@ const ExchangeRow = (props) => {
                         <p className="text-lg mb-2">
                             <strong>Format:</strong> {book_information.holdings.format}
                         </p>
-                        <p className="text-lg mb-2">
+                        <p className="text-lg mb-2 mb-2">
                             <strong>Available Copies:</strong> {book_information.holdings.available_copies} / {book_information.holdings.total_copies} 
                         </p>
+                        {book_information.holdings.isbn !== "" && (
+                            <Link className="transition-all duration-100 delay-50 hover:text-emerald-500 text-emerald-700" href={`/book/${book_information.holdings.id}`} passHref>
+                                View More
+                            </Link>
+                        )}
                     </div>
                     <img style={{ display : book_information.holdings.isbn !== "" ? 'block' : 'none'}} className='rounded-lg  object-cover' src={book_information.holdings.isbn !== "" ? `https://covers.openlibrary.org/b/isbn/${book_information.holdings.isbn}-M.jpg` : ""}/>
                 </div>
@@ -342,12 +347,12 @@ const ExchangeRow = (props) => {
                             </ol>
                         </div>
                     </div>
-                    <div className="link-container">
+                    {/* <div className="link-container">
                         <Link href="/all-books" className="link">
                             All Books
                         </Link>
                         <p className="link">Checkout Log</p>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>

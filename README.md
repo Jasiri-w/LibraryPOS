@@ -5,11 +5,14 @@ A POS Web Application for highschool libraries
 _https://library-pos.vercel.app/_
 
 ## Preview
-![image](https://user-images.githubusercontent.com/6060064/230548231-2474f17c-7246-4748-a57f-4317854ed242.png)
-
+![alt text]({57206C24-341C-43BE-BBDD-2875B79B7560}.png)
+![alt text]({11B54F58-8BC4-4A04-A4B7-4EAE4D76C822}.png)
+![alt text]({2EF18C1D-6F6B-4648-8454-8D2E952CB452}.png)
+![alt text]({9937F1C5-34C6-44FF-B686-CB349256BB6D}.png)
 
 ## Tech Stack
 Next.js
 TailwindCSS
 Prisma
 Supabase
+

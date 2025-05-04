@@ -22,8 +22,12 @@ a {
 
 @layer base{
   
-  button, input[type="submit"],input[type="reset"], input[type="text"] {
-    @apply bg-emerald-400 focus:ring-emerald-500 border-2
+  input[type="submit"], input[type="reset"] {
+    @apply bg-emerald-400;
+  }
+
+  button, input[type="submit"],input[type="reset"], input[type="text"] ,.button {
+    @apply focus:ring-emerald-500 border-2
     text-white hover:text-black
     transition-all duration-150 ease-in
     px-3 py-3 rounded-lg shadow-sm 
@@ -33,8 +37,12 @@ a {
   }
 }
 
-button:hover, input[type="submit"]:hover {
+button:hover, input[type="submit"]:hover, .button:hover{
   cursor: pointer;
+}
+
+.body{
+  min-height: 100vh;
 }
 
 @layer components{
