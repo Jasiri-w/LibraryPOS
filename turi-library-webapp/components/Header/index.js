@@ -71,11 +71,11 @@ const ThemeIcon = () => {
     const [darkTheme, setDarkTheme] = useDarkMode();
     const handleMode = () => setDarkTheme(!darkTheme);
     return (
-        <span onClick={handleMode}>
+        <span onClick={handleMode} title="Dark\Light Mode">
         {darkTheme ? (
-            <FaSun size='24' className='top-navigation-icon' title="Light Mode" />
+            <FaSun size='24' className='top-navigation-icon'  />
         ) : (
-            <FaMoon size='24' className='top-navigation-icon' title="Dark Mode" />
+            <FaMoon size='24' className='top-navigation-icon' />
         )}
         </span>
     );
