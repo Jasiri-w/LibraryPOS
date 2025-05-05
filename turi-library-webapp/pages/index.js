@@ -33,7 +33,7 @@ export default function Home(props) {
           </main>
         </div>
       </div>
-
+      <Analytics />
     </div>
   )
 }
