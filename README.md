@@ -13,6 +13,14 @@ Test Barcodes & Student IDs:
 
 ---
 
+## 🛠️ Tech Stack
+
+* **Next.js** – React framework for server-side rendering and static site generation.
+* **Tailwind CSS** – Utility-first CSS framework for rapid UI development.
+* **Prisma** – Next-generation ORM for database access.
+* **Supabase** – Open-source Firebase alternative for authentication and database management.
+---
+
 ## 🖼️ Preview
 
 ### 📊 Dashboard View
@@ -33,18 +41,8 @@ Test Barcodes & Student IDs:
 
 ---
 
-## 🛠️ Tech Stack
-
-* **Next.js** – React framework for server-side rendering and static site generation.
-* **Tailwind CSS** – Utility-first CSS framework for rapid UI development.
-* **Prisma** – Next-generation ORM for database access.
-* **Supabase** – Open-source Firebase alternative for authentication and database management.
-
----
-
 ## 🚀 Features
 
-* **User Authentication**: Secure login and session management using Supabase Auth.
 * **Dashboard Overview**: Real-time insights into library operations, including active checkouts and returns.
 * **Book Management**: Add, edit, and remove books with detailed information.
 * **Search Functionality**: Quickly search for books by title, author, or ISBN.
