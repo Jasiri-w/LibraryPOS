@@ -301,6 +301,19 @@ const ExchangeRow = (props) => {
         setInputs(values => ({...values, ["barcode"]: ""}));
         setInputs(values => ({...values, ["title"]: ""}));
         setInputs(values => ({...values, ["author"]: ""}));
+        
+        setBookInformation({
+            holdings: {
+                id: "",
+                title: "",
+                author: "",
+                barcode: "",
+                isbn: "",
+                format: "",
+                total_copies: 0,
+                available_copies: 0,
+            },
+        });
     }
 
     //console.log("Books:", books);
@@ -316,22 +329,22 @@ const ExchangeRow = (props) => {
                         <div className="grid grid-cols-2 gap-6" id="book-form-grid">
                             <label className="block">
                                 <span className="text-gray-700 dark:text-slate-400">Student ID</span>
-                                <input required name="student_id" type="text" className="field" placeholder="123456789" value={inputs.student_id || ""} onChange={handleChangeStudent}/>
+                                <input required name="student_id" type="text" className="field" placeholder="e.g. 2" value={inputs.student_id || ""} onChange={handleChangeStudent}/>
                             </label>
                             <label className="block my-auto text-center pt-4">
                                 <span className="text-gray-700 text-2xl font-bold inline-block dark:text-white">{student_information.holdings.first_name || ""} {student_information.holdings.boarding_house || ""}</span>
                             </label>
                             <label className="block">
                                 <span className="text-gray-700 dark:text-slate-400">Book Barcode</span>
-                                <input required name="barcode" value={inputs.barcode || ""} onChange={handleChangeBook} type="text" className="field" placeholder="123456789"/>
+                                <input required name="barcode" value={inputs.barcode || ""} onChange={handleChangeBook} type="text" className="field" placeholder="123456789012"/>
                             </label>
                             <label className="block">
                                 <span className="text-gray-700 dark:text-slate-400">Title</span>
-                                <input required name="title" onChange={handleChangeBook} value={inputs.title || ""} type="text" className="field" placeholder="Of Mice and Men" />
+                                <input required name="title" onChange={handleChangeBook} value={inputs.title || ""} type="text" className="field" placeholder="Wonder" />
                             </label>
                             <label className="block">
                                 <span className="text-gray-700 dark:text-slate-400">Author</span>
-                                <input required name="author" value={inputs.author || ""} onChange={handleChangeBook} type="text" className="field" placeholder="John Steinbeck"/>
+                                <input required name="author" value={inputs.author || ""} onChange={handleChangeBook} type="text" className="field" placeholder="James W. Ellison"/>
                             </label>
                             <span className="block align-middle text-right pt-4">
                                 <input type ="submit" value="Checkout" className="mx-2" disabled={book_information.barcode === "" || book_information.title === ""}></input>

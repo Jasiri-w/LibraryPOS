@@ -21,10 +21,7 @@ a {
 }
 
 @layer base{
-  
-  input[type="submit"], input[type="reset"] {
-    @apply bg-emerald-400;
-  }
+
 
   button, input[type="submit"],input[type="reset"], input[type="text"] ,.button {
     @apply focus:ring-emerald-500 border-2
@@ -39,7 +36,7 @@ a {
   }
 
   button, input[type="submit"],input[type="reset"],.button{
-    @apply text-white hover:text-black;
+    @apply bg-emerald-400 text-white hover:text-black;
   }
 
   input[type="text"] {
