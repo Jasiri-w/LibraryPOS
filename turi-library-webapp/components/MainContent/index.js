@@ -93,45 +93,79 @@ const ExchangeRow = (props) => {
                     const availableCount = book.Copies.filter((copy) => copy.status.toLowerCase() === "available").length;
                     const totalCount = book.Copies.length;
                     setBookInformation({ holdings: { ...bookCopy, title: book.title, author: book.author, isbn: book.isbn, format: book.format, total_copies: totalCount, available_copies: availableCount} });
+                }else{
+                    setInputs((values) => ({
+                        ...values,
+                        title: "",
+                        author: "",
+                    }));
                 }
             } else {
+                setInputs((values) => ({
+                    ...values,
+                    title: "",
+                    author: "",
+                }));
                 console.log("No matching barcode found.");
             }
-        }
-    };
-
-    const handleChangeTitle = (event) => {
-        const name = event.target.name;
-        const value = event.target.value;
-        setInputs((values) => ({ ...values, [name]: value }));
-
-        if (name === "title") {
-            // Find the Book by title
+        }else if (name === "title") {
+            // Find the BookCopy by title name
             const book = books.find((b) => b.title.toLowerCase() === value.toLowerCase());
 
             if (book) {
-                // Populate author
-                setInputs((values) => ({
-                    ...values,
-                    author: book.author,
-                }));
-
-                // Find the first available BookCopy
-                const availableCopy = book.Copies.find((copy) => copy.status.toLowerCase() === "available");
-
-                if (availableCopy) {
+                const availableCount = book.Copies.filter((copy) => copy.status.toLowerCase() === "available").length;
+                const totalCount = book.Copies.length;
+                const nearestAvailableCopy = book.Copies.find((copy) => copy.status.toLowerCase() === "available");
+                if (nearestAvailableCopy) {
                     setInputs((values) => ({
                         ...values,
-                        barcode: availableCopy.barcode,
+                        barcode: nearestAvailableCopy.barcode,
+                        author: book.author,
                     }));
-                    setBookInformation({ holdings: { ...availableCopy, title: book.title, author: book.author } });
-                } else {
+                    setBookInformation({ holdings: { ...nearestAvailableCopy, title: book.title, author: book.author, isbn: book.isbn, format: book.format, total_copies: totalCount, available_copies: availableCount} });
+                }else{
+                    setInputs((values) => ({
+                        ...values,
+                        barcode: "",
+                        author: book.author,
+                    }));
                     console.log("All copies are currently checked out.");
+                    setBookInformation({ holdings: {...book, title: book.title, author: book.author, isbn: book.isbn, format: book.format, total_copies: totalCount, available_copies: availableCount} });
+                }
+            } else {
+                console.log("No matching book found.");
+            }
+        }else if (name === "author") {
+            // Find the BookCopy by title name
+            const book = books.find((b) => b.author.toLowerCase() === value.toLowerCase());
+
+            if (book) {
+                const availableCount = book.Copies.filter((copy) => copy.status.toLowerCase() === "available").length;
+                const totalCount = book.Copies.length;
+                const nearestAvailableCopy = book.Copies.find((copy) => copy.status.toLowerCase() === "available");
+                if (nearestAvailableCopy) {
+                    setInputs((values) => ({
+                        ...values,
+                        barcode: nearestAvailableCopy.barcode,
+                        title: book.title,
+                    }));
+                    setBookInformation({ holdings: { ...nearestAvailableCopy, title: book.title, author: book.author, isbn: book.isbn, format: book.format, total_copies: totalCount, available_copies: availableCount} });
+                }else{
+                    setInputs((values) => ({
+                        ...values,
+                        barcode: "",
+                        title: ""
+                    }));
+                    console.log("All copies are currently checked out.");
+                    setBookInformation({ holdings: {...book, title: book.title, author: book.author, isbn: book.isbn, format: book.format, total_copies: totalCount, available_copies: availableCount} });
                 }
             } else {
                 console.log("No matching book found.");
             }
         }
+
+        console.log("Inputs:", inputs);
+        console.log("Book Information:", book_information);
     };
 
     const handleChange = (event) => {
@@ -271,6 +305,7 @@ const ExchangeRow = (props) => {
 
     //console.log("Books:", books);
     console.log("Checkouts:", checkouts);
+    console.log("Book Information:", book_information);
 
     return (
         <div className=" ">
@@ -292,14 +327,14 @@ const ExchangeRow = (props) => {
                             </label>
                             <label className="block">
                                 <span className="text-gray-700 dark:text-slate-400">Title</span>
-                                <input name="title" onChange={handleChange} value={inputs.title || ""} type="text" className="field" placeholder="Of Mice and Men" />
+                                <input required name="title" onChange={handleChangeBook} value={inputs.title || ""} type="text" className="field" placeholder="Of Mice and Men" />
                             </label>
                             <label className="block">
                                 <span className="text-gray-700 dark:text-slate-400">Author</span>
-                                <input name="author" value={inputs.author || ""} onChange={handleChange} type="text" className="field" placeholder="John Steinbeck"/>
+                                <input required name="author" value={inputs.author || ""} onChange={handleChangeBook} type="text" className="field" placeholder="John Steinbeck"/>
                             </label>
                             <span className="block align-middle text-right pt-4">
-                                <input type ="submit" value="Checkout" className="mx-2"></input>
+                                <input type ="submit" value="Checkout" className="mx-2" disabled={book_information.barcode === "" || book_information.title === ""}></input>
                                 <input type ="reset" value="Clear" className="mx-2" onClick={clearInputs}></input>
                             </span>
                         </div>

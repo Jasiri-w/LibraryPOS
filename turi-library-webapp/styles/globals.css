@@ -32,7 +32,10 @@ a {
     px-3 py-3 rounded-lg shadow-sm 
     hover:bg-white hover:ring-emerald-500 hover:border-emerald-500 
     hover:rounded-xl
-    dark:text-white dark:border-emerald-500 dark:hover:bg-emerald-400 dark:bg-slate-800;
+    hover:cursor-pointer
+    dark:text-white dark:border-emerald-500 dark:hover:bg-emerald-400 dark:bg-slate-800
+    disabled:text-gray-400 disabled:bg-transparent disabled:border-gray-400 disabled:hover:rounded-lg disabled:cursor-none disabled:hover:cursor-none
+    dark:disabled:text-gray-400 dark:disabled:bg-transparent dark:disabled:border-gray-400 ;
   }
 
   button, input[type="submit"],input[type="reset"],.button{
