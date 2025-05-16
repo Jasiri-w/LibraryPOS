@@ -306,26 +306,35 @@ const ExchangeRow = (props) => {
                     </div>
                 </form>
                 <div className="split card-container flex justify-between book-info-home">
-                    <div className="">
+                    {book_information.holdings.isbn === "" ? (
+                        <div className="flex flex-col items-center justify-center h-full w-full text-center">
+                            <div className="text-4xl text-gray-500 italic mb-8">Scan a book or enter a Title!</div>
+                            <Link href="/all-books" className="button">Explore!</Link>
+                        </div>
+                    ) : (
+                        <div className="">
                             <h2 className="text-2xl font-bold mb-4">{book_information.holdings.title}</h2>
-                        <p className="text-lg mb-2">
-                            <strong>Author:</strong> {book_information.holdings.author}
-                        </p>
-                        <p className="text-lg mb-2">
-                            <strong>ISBN:</strong> {book_information.holdings.isbn} 
-                        </p>
-                        <p className="text-lg mb-2">
-                            <strong>Format:</strong> {book_information.holdings.format}
-                        </p>
-                        <p className="text-lg mb-2 mb-2">
-                            <strong>Available Copies:</strong> {book_information.holdings.available_copies} / {book_information.holdings.total_copies} 
-                        </p>
-                        {book_information.holdings.isbn !== "" && (
-                            <Link className="transition-all duration-100 delay-50 hover:text-emerald-500 text-emerald-700" href={`/book/${book_information.holdings.id}`} passHref>
+                            <p className="text-lg mb-2">
+                                <strong>Author:</strong> {book_information.holdings.author}
+                            </p>
+                            <p className="text-lg mb-2">
+                                <strong>ISBN:</strong> {book_information.holdings.isbn}
+                            </p>
+                            <p className="text-lg mb-2">
+                                <strong>Format:</strong> {book_information.holdings.format}
+                            </p>
+                            <p className="text-lg mb-2">
+                                <strong>Available Copies:</strong> {book_information.holdings.available_copies} / {book_information.holdings.total_copies}
+                            </p>
+                            <Link
+                                className="transition-all duration-100 delay-50 hover:text-emerald-500 text-emerald-700"
+                                href={`/book/${book_information.holdings.id}`}
+                                passHref
+                            >
                                 View More
                             </Link>
-                        )}
-                    </div>
+                        </div>
+                    )}
                     <img style={{ display : book_information.holdings.isbn !== "" ? 'block' : 'none'}} className='rounded-lg  object-cover' src={book_information.holdings.isbn !== "" ? `https://covers.openlibrary.org/b/isbn/${book_information.holdings.isbn}-M.jpg` : ""}/>
                 </div>
             </div>
