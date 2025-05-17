@@ -8,6 +8,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model Student {
@@ -49,6 +50,7 @@ model Book {
   title     String
   author    String
   format    String
+  edition   String      @unique
   Copies    BookCopy[]
 }
 

@@ -13,7 +13,7 @@ export default function BookDetails({ book, total_copies, available_copies }) {
         <meta name="description" content={`Details about the book: ${book.title}`} />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="bg-white dark:bg-slate-800 dark:text-slate-400 pt-10 md:px-20 h-screen">
+      <div className="bg-white dark:bg-slate-800 dark:text-slate-400 pt-10 md:px-20 min-h-screen">
         <Header />
         <div className="content dark:bg-slate-800">
           <h1 className="text-center dark:text-white text-4xl font-bold my-4">{book.title}</h1>
@@ -31,12 +31,11 @@ export default function BookDetails({ book, total_copies, available_copies }) {
             {/* Right Column: Book Information */}
             <div className="book-info flex-1">
               <h2 className="text-2xl font-bold mb-4 dark:text-white">{book.title} ({book.publish_date})</h2>
-              <h2 className="text-1xl mb-4">{book.subtitle}</h2>
               <p className="text-lg mb-2">
                 <strong>Author:</strong> {book.author}
               </p>
               <p className="text-lg mb-2">
-                <strong>ISBN:</strong> {book.isbn}
+                <strong>ISBN 13:</strong> {book.isbn}
               </p>
               <p className="text-lg mb-2">
                 <strong># of Pages:</strong> {book.number_of_pages}
@@ -54,7 +53,7 @@ export default function BookDetails({ book, total_copies, available_copies }) {
                 <strong>Description:</strong> {book.description || 'No description available.'}
               </p>
               <a
-                href={`https://openlibrary.org${book.oid}`}
+                href={`https://openlibrary.org/books/${book.edition}`}
                 className="text-blue-500 hover:underline mt-4 block"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -103,9 +102,9 @@ export async function getServerSideProps(context) {
   const total_copies = book.Copies.length;
   const available_copies = book.Copies.filter((copy) => copy.status === "Available").length;
 
-  if (book.isbn) {
+  if (book.edition) {
     try {
-      const res = await fetch(`https://openlibrary.org/isbn/${book.isbn}.json`);
+      const res = await fetch(`https://openlibrary.org/books/${book.edition}.json`);
       if (res.ok) {
         const data = await res.json();
   
@@ -114,38 +113,30 @@ export async function getServerSideProps(context) {
           ? data.description 
           : data.description?.value || "No description available.";
   
-        book.subtitle = data.subtitle || "No subtitle available.";
         book.publish_date = data.publish_date || "No publish date available.";
         book.dewey_decimal_class = Array.isArray(data.dewey_decimal_class) 
           ? data.dewey_decimal_class[0] 
           : "No classification available.";
         book.number_of_pages = data.number_of_pages || "No page count available.";
-        book.oid = data.works[0].key || "No work key available.";
       } else {
         // Default values on fetch failure
         book.description = "No description available.";
-        book.subtitle = "No subtitle available.";
         book.publish_date = "No publish date available.";
         book.dewey_decimal_class = "No classification available.";
         book.number_of_pages = "No page count available.";
-        book.oid = "No work key available.";
       }
     } catch (error) {
       console.error("Failed to fetch book metadata:", error);
       book.description = "No description available.";
-      book.subtitle = "No subtitle available.";
       book.publish_date = "No publish date available.";
       book.dewey_decimal_class = "No classification available.";
       book.number_of_pages = "No page count available.";
-      book.oid = "No work key available.";
     }
   } else {
       book.description = "No ISBN available for description lookup.";
-      book.subtitle = "No subtitle available.";
       book.publish_date = "No publish date available.";
       book.dewey_decimal_class = "No classification available.";
       book.number_of_pages = "No page count available.";
-      book.oid = "No work key available.";
   }
 
   await prisma.$disconnect();

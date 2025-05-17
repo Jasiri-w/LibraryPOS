@@ -16,7 +16,7 @@ const Header = () => {
         <div className='header'>
             {/*<HashtagIcon />*/}
             <div className=""><Logo/></div>
-            <Title />
+            <HeaderTitle />
             <ThemeIcon />
             <ToggleNavigation/>
             <FullScreenNavigation />
@@ -91,6 +91,6 @@ const BellIcon = () => <FaRegBell size='24' className='top-navigation-icon' />;
 const UserCircle = () => <FaUserCircle size='24' className='top-navigation-icon' />;
 const HashtagIcon = () => <FaHashtag size='20' className='title-hashtag' />;
 const Logo = () => <picture><img src="/logo.png" className="static responsive" style={{ maxHeight: '4em'}}/></picture>;
-const Title = () => <h5 className='title-text'><Link href="/">Library</Link></h5>;
+const HeaderTitle = () => <h5 className='title-text'><Link href="/">Library</Link></h5>;
   
 export default Header;

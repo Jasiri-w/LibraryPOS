@@ -316,7 +316,29 @@ const ExchangeRow = (props) => {
         });
     }
 
-    //console.log("Books:", books);
+    const surpriseMe = () => {
+        const randomBook = books[Math.floor(Math.random() * books.length)];
+        const randomCopy = randomBook.Copies[Math.floor(Math.random() * randomBook.Copies.length)];
+        setInputs({
+            barcode: randomCopy.barcode,
+            title: randomBook.title,
+            author: randomBook.author,
+        });
+        setBookInformation({
+            holdings: {
+                id: randomCopy.id,
+                title: randomBook.title,
+                author: randomBook.author,
+                barcode: randomCopy.barcode,
+                isbn: randomBook.isbn,
+                format: randomBook.format,
+                total_copies: randomBook.total_copies,
+                available_copies: randomBook.available_copies,
+            },
+        });
+    }
+
+    console.log("Books:", books);
     console.log("Checkouts:", checkouts);
     console.log("Book Information:", book_information);
 
@@ -357,7 +379,7 @@ const ExchangeRow = (props) => {
                     {book_information.holdings.isbn === "" ? (
                         <div className="flex flex-col items-center justify-center h-full w-full text-center">
                             <div className="text-4xl text-gray-500 italic mb-8">Scan a book or enter a Title!</div>
-                            <Link href="/all-books" className="button">Explore!</Link>
+                            <div className="flex justify-between"><Link href="/all-books" className="button">Explore!</Link><button onClick={surpriseMe}>Surprise Me!</button></div>
                         </div>
                     ) : (
                         <div className="">
