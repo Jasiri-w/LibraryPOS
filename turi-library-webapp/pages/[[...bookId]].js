@@ -22,14 +22,10 @@ export default function Home(props) {
       </Head>
 
       <div className="body">
-        {/**<div className="bg-slate-900 fixed top-0 left-0 h-screen w-20 ">
-          <SideBar/>
-  </div>**/}
         <div className="w-full home-container">
           <main className="main-content-container">
-            
-              <Header />
-            <MainContent message="man" db_data={props.db_data}/>
+            <Header />
+            <MainContent db_data={props.db_data} selectedBook={props.selectedBook}/>
           </main>
         </div>
       </div>
@@ -38,15 +34,18 @@ export default function Home(props) {
   )
 }
 
-///For next time: In order for the frontend to display the book and the student to which the book is 
-// checked out, then the books requried must be queried here in the backend getServerSideProps.
-// Then the book, student and timing data need to be placed in a single object relating to one 
-// checkout. DONE This should be served as its own prop for efficiency.  DONE
-
-// Next we need to understand the "Post" features of prisma so that we can checkout and return 
-// books without refresh in the form. We have to use hooks to data bind the portrayed checkout list 
-// while still updating the database as fast as possible with as few refreshes as possible.
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+  const bookId = context.params?.bookId ? parseInt(context.params.bookId) : null;
+  let selectedBook = null;
+  if (bookId) {
+    selectedBook = await prisma.book.findUnique({
+      where: { id: bookId },
+      include: {
+        Copies: true,
+      },
+    });
+  }
+  console.log("Selected Book: ", selectedBook);
   const checkouts = await prisma.checkout.findMany({
     include: {
       Student: true,
@@ -84,20 +83,11 @@ export async function getServerSideProps() {
     }),
   }
 
-  /*for(var x = 0; x < ser_checkouts.length; x++){
-    console.log(JSON.parse(checkouts[x].checkout_date).json);
-  }*/
-
-  /*console.log("Database_data at GSSP function in main page:");
-  console.table(database_data);
-  console.log("Serialized Checkouts: ");
-  console.table(ser_checkouts);
-  console.log("Checkouts Rawdogged");
-  console.table(checkouts);*/
   await prisma.$disconnect();
   return{
     props:{
         db_data: database_data,
+        selectedBook: selectedBook,
     }
   }
 }

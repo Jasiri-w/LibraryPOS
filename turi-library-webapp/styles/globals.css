@@ -92,7 +92,7 @@ button:hover, input[type="submit"]:hover, .button:hover{
       height:auto;
     }
     .home-container{
-      @apply mx-10;
+      @apply mx-0;
     }
     .dashboard-container{
       @apply h-full flex flex-col;

@@ -181,9 +181,28 @@ export default function AllBooks({ books, bookAvailability, bookRequests }) {
                         </span>
                         <div className='my-auto'>
                           {isBookInLibrary(result.title, result.author_name?.[0]) ? (
-                            <span className="text-green-500">It&apos;s already in our library!</span>
+                            <span className="text-green-500">
+                              {result.title}&apos;s already in our library!{' '}
+                              <span
+                                className="underline cursor-pointer"
+                                onClick={() => {
+                                  const foundBook = books.find(
+                                    (book) =>
+                                      book.title.toLowerCase() === result.title.toLowerCase() &&
+                                      book.author.toLowerCase() === (result.author_name?.[0] || '').toLowerCase()
+                                  );
+                                  if (foundBook) {
+                                    router.push(`/book/${foundBook.id}`);
+                                  } else {
+                                    alert('Book not found in library!');
+                                  }
+                                }}
+                              >
+                                View Here
+                              </span>  
+                            </span>
                           ) : isBookAlreadyRequested(result.title, result.author_name?.[0], result.key.split('/')[2], result) ? (
-                            <span className="text-yellow-500">This has already been requested!</span>
+                            <span className="text-yellow-500">This has already been requested! </span>
                           ) : (
                             <button
                               className=""
@@ -244,6 +263,7 @@ export async function getServerSideProps() {
 
   // Remove the Copies array from the books to avoid sending unnecessary data
   const sanitizedBooks = books.map(({ Copies, ...rest }) => rest);
+  console.log('Sanitized Books:', sanitizedBooks);
   await prisma.$disconnect();
   return {
     props: {

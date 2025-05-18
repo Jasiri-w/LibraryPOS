@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useEffect } from 'react';
 import Link from 'next/link';
 
 import DueBooks from '../DueBooks';
@@ -6,7 +7,7 @@ import DueBooks from '../DueBooks';
 const MainContent = (props) => {
     return (
         <>
-            <ExchangeRow db_data={props.db_data} students={props.db_data.students} books={props.db_data.books} />
+            <ExchangeRow db_data={props.db_data} students={props.db_data.students} books={props.db_data.books} selectedBook={props.selectedBook} />
             {/**<DueBooks  checkouts={checkouts} setCheckout={setCheckout}/>**/}
             {/**<div className="dashboard-container">
                 <AllBooks/>
@@ -18,9 +19,23 @@ const MainContent = (props) => {
 
 const ExchangeRow = (props) => {
     const [checkouts, setCheckout] = useState(props.db_data.checkouts);
-    const [inputs, setInputs] = useState({
-        student_id: "",
-    });
+    const initialInputs = props.selectedBook
+  ? {
+      student_id: "",
+      barcode: props.selectedBook.Copies?.find(copy => copy.status.toLowerCase() === "available")?.barcode || "",
+      title: props.selectedBook.title || "",
+      author: props.selectedBook.author || "",
+    }
+  : {
+      student_id: "",
+      barcode: "",
+      title: "",
+      author: "",
+    };
+    console.log("Selected Book:", props.selectedBook);
+    console.log("Initial Inputs:", initialInputs);
+    const [inputs, setInputs] = useState(initialInputs);
+    console.log("Inputs:", inputs);
     const [students, setStudents] = useState(props.students)
     const [books, setBooks] = useState(props.books)
     const [student_information, setStudentInformation] = useState({
@@ -168,11 +183,6 @@ const ExchangeRow = (props) => {
         console.log("Book Information:", book_information);
     };
 
-    const handleChange = (event) => {
-        const name = event.target.name;
-        const value = event.target.value;
-        setInputs(values => ({...values, [name]: value}));
-    }
 
     async function saveCheckout(checkout){
         const response = await fetch('/api/checkouts', {
@@ -318,29 +328,114 @@ const ExchangeRow = (props) => {
 
     const surpriseMe = () => {
         const randomBook = books[Math.floor(Math.random() * books.length)];
-        const randomCopy = randomBook.Copies[Math.floor(Math.random() * randomBook.Copies.length)];
+        const nearestAvailableCopy = randomBook.Copies.find((copy) => copy.status.toLowerCase() === "available");
         setInputs({
-            barcode: randomCopy.barcode,
+            barcode: nearestAvailableCopy?.barcode || "",
             title: randomBook.title,
             author: randomBook.author,
         });
+
+        const availableCount = randomBook.Copies.filter((copy) => copy.status.toLowerCase() === "available").length;
+        const totalCount = randomBook.Copies.length;
+
         setBookInformation({
             holdings: {
-                id: randomCopy.id,
+                id: randomBook.id,
                 title: randomBook.title,
                 author: randomBook.author,
-                barcode: randomCopy.barcode,
+                barcode: nearestAvailableCopy?.barcode || "",
                 isbn: randomBook.isbn,
                 format: randomBook.format,
-                total_copies: randomBook.total_copies,
-                available_copies: randomBook.available_copies,
+                total_copies: totalCount,
+                available_copies: availableCount,
             },
         });
     }
 
-    console.log("Books:", books);
-    console.log("Checkouts:", checkouts);
-    console.log("Book Information:", book_information);
+    const nextBook = () => {
+        const currentIndex = books.findIndex((book) => book.id === book_information.holdings.id);
+        const nextIndex = (currentIndex + 1) % books.length;
+        const nextBook = books[nextIndex];
+        const nextCopy = nextBook.Copies.find((copy) => copy.status.toLowerCase() === "available") || ""; // Fallback to the first copy if no available copies
+        setInputs({
+            barcode: nextCopy.barcode,
+            title: nextBook.title,
+            author: nextBook.author,
+        });
+
+        const availableCount = nextBook.Copies.filter((copy) => copy.status.toLowerCase() === "available").length;
+        const totalCount = nextBook.Copies.length;
+        setBookInformation({
+            holdings: {
+                id: nextBook.id,
+                title: nextBook.title,
+                author: nextBook.author,
+                barcode: nextCopy.barcode,
+                isbn: nextBook.isbn,
+                format: nextBook.format,
+                total_copies: totalCount,
+                available_copies: availableCount,
+            },
+        });
+    }
+    const prevBook = () => {
+        const currentIndex = books.findIndex((book) => book.id === book_information.holdings.id);
+        const prevIndex = (currentIndex - 1 + books.length) % books.length;
+        const prevBook = books[prevIndex];
+        const prevCopy = prevBook.Copies.find((copy) => copy.status.toLowerCase() === "available") || ""; // Fallback to the first copy if no available copies
+        setInputs({
+            barcode: prevCopy.barcode,
+            title: prevBook.title,
+            author: prevBook.author,
+        });
+
+        const availableCount = prevBook.Copies.filter((copy) => copy.status.toLowerCase() === "available").length;
+        const totalCount = prevBook.Copies.length;
+        setBookInformation({
+            holdings: {
+                id: prevBook.id,
+                title: prevBook.title,
+                author: prevBook.author,
+                barcode: prevCopy.barcode,
+                isbn: prevBook.isbn,
+                format: prevBook.format,
+                total_copies: totalCount,
+                available_copies: availableCount,
+            },
+        });
+    }
+
+    useEffect(() => {
+        if(props.selectedBook){
+            if (props.selectedBook.id !== book_information.holdings.id){
+                const selectedBook = props.selectedBook;
+                const availableCount = selectedBook.Copies.filter((copy) => copy.status.toLowerCase() === "available").length;
+                const totalCount = selectedBook.Copies.length;
+                const nearestAvailableCopy = selectedBook.Copies.find((copy) => copy.status.toLowerCase() === "available");
+                setInputs({
+                    barcode: nearestAvailableCopy ? nearestAvailableCopy.barcode : "",
+                    title: selectedBook.title,
+                    author: selectedBook.author,
+                });
+                setBookInformation({
+                    holdings: {
+                        id: selectedBook.id,
+                        title: selectedBook.title,
+                        author: selectedBook.author,
+                        barcode: nearestAvailableCopy ? nearestAvailableCopy.barcode : "",
+                        isbn: selectedBook.isbn,
+                        format: selectedBook.format,
+                        total_copies: totalCount,
+                        available_copies: availableCount
+                    },
+                });
+            }
+        }
+    }, [props.selectedBook]);
+    console.log("Inputs:", inputs);
+    // console.log("Books:", books);
+    // console.log("Checkouts:", checkouts);
+    // console.log("Book Information:", book_information);
 
     return (
         <div className=" ">
@@ -379,10 +474,13 @@ const ExchangeRow = (props) => {
                     {book_information.holdings.isbn === "" ? (
                         <div className="flex flex-col items-center justify-center h-full w-full text-center">
                             <div className="text-4xl text-gray-500 italic mb-8">Scan a book or enter a Title!</div>
-                            <div className="flex justify-between"><Link href="/all-books" className="button">Explore!</Link><button onClick={surpriseMe}>Surprise Me!</button></div>
+                            <div className="flex justify-around w-64">
+                                <Link href="/all-books" className="button">Explore</Link>
+                                <button onClick={surpriseMe}>Surprise Me!</button>
+                            </div>
                         </div>
                     ) : (
-                        <div className="">
+                        <div className="last:mt-8">
                             <h2 className="text-2xl font-bold mb-4">{book_information.holdings.title}</h2>
                             <p className="text-lg mb-2">
                                 <strong>Author:</strong> {book_information.holdings.author}
@@ -403,6 +501,14 @@ const ExchangeRow = (props) => {
                             >
                                 View More
                             </Link>
+
+                            <p className="my-4">
+                                <button onClick={surpriseMe}>Surprise Me!</button>
+                                <span className="ml-4">
+                                    <button onClick={prevBook} className=""> &larr; </button>
+                                    <button onClick={nextBook} className=""> &rarr; </button>
+                                </span>
+                            </p>
                         </div>
                     )}
                     <img style={{ display : book_information.holdings.isbn !== "" ? 'block' : 'none'}} className='rounded-lg  object-cover' src={book_information.holdings.isbn !== "" ? `https://covers.openlibrary.org/b/isbn/${book_information.holdings.isbn}-M.jpg` : ""}/>
@@ -417,7 +523,6 @@ const ExchangeRow = (props) => {
                                 {
                                     checkouts.length === 0 ? <li className="text-center">No books checked out! Happy Reading!</li> :
                                     checkouts.map(check =>{
-                                        console.log("Check:", check);
                                         return(
                                             <li className="checkout-elem" onClick={handleDelete} id={check.id} key={check.id}> {check.Student.first_name} {check.Student.last_name} - {check.BookCopy.Book.title} by {check.BookCopy.Book.author} - Since {dateify(check.checkout_date)} </li>
                                         );

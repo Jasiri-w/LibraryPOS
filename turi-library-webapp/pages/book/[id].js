@@ -54,12 +54,17 @@ export default function BookDetails({ book, total_copies, available_copies }) {
               </p>
               <a
                 href={`https://openlibrary.org/books/${book.edition}`}
-                className="text-blue-500 hover:underline mt-4 block"
+                className="text-blue-500 hover:underline my-4 block"
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 View More details
               </a>
+              { available_copies > 0 ? (
+                  <Link href={`/${book.id}`} className="button my-8">
+                    Check Out
+                  </Link>
+              ) : null }
             </div>
           </div>
         </div>
