@@ -263,7 +263,6 @@ export async function getServerSideProps() {
 
   // Remove the Copies array from the books to avoid sending unnecessary data
   const sanitizedBooks = books.map(({ Copies, ...rest }) => rest);
-  console.log('Sanitized Books:', sanitizedBooks);
   await prisma.$disconnect();
   return {
     props: {

@@ -5,9 +5,9 @@ const useLocalStorage = (key, initialValue) => {
     try {
       const item = window.localStorage.getItem(key);
       return item ? JSON.parse(item) : initialValue;
-    } catch (error) {
-      console.log(error);
-      console.log(initialValue);
+    } catch (error) { // Window localStorage is not yet available
+      // console.log(error);
+      // console.log(initialValue);
       return initialValue;
     }
   });
@@ -20,8 +20,8 @@ const useLocalStorage = (key, initialValue) => {
       if (typeof window !== "undefined") {
         window.localStorage.setItem(key, JSON.stringify(valueToStore));
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error) {  // Window localStorage is not yet available
+      // console.log(error);
     }
   };
   return [storedValue, setValue];

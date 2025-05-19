@@ -17,7 +17,7 @@ const Header = () => {
             {/*<HashtagIcon />*/}
             <div className=""><Logo/></div>
             <HeaderTitle />
-            <ThemeIcon />
+            <ThemeIcon suppressHydrationWarning />
             <ToggleNavigation/>
             <FullScreenNavigation />
             {/*<Search />
@@ -35,7 +35,7 @@ const FullScreenNavigation = () => {
 
 
     return (
-        <div className='text-white transition-all transition-duration-150 ease-in-out full-screen-navigation w-screen h-screen z-9999 bg-black/50 backdrop-blur-md nav'>
+        <div className='text-white transition-all transition-duration-150 ease-in-out full-screen-navigation w-screen h-screen z-9999 bg-black/50 backdrop-blur-md nav' onClick={toggleNavigation}>
             <div className='full-screen-navigation-close' onClick={toggleNavigation}>
                 <span title="Close Nav">&#10006;</span>
             </div>

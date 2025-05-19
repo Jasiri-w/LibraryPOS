@@ -45,7 +45,6 @@ export async function getServerSideProps(context) {
       },
     });
   }
-  console.log("Selected Book: ", selectedBook);
   const checkouts = await prisma.checkout.findMany({
     include: {
       Student: true,

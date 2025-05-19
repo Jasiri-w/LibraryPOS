@@ -32,10 +32,8 @@ const ExchangeRow = (props) => {
       title: "",
       author: "",
     };
-    console.log("Selected Book:", props.selectedBook);
-    console.log("Initial Inputs:", initialInputs);
+
     const [inputs, setInputs] = useState(initialInputs);
-    console.log("Inputs:", inputs);
     const [students, setStudents] = useState(props.students)
     const [books, setBooks] = useState(props.books)
     const [student_information, setStudentInformation] = useState({
@@ -432,7 +430,6 @@ const ExchangeRow = (props) => {
             }
         }
     }, [props.selectedBook]);
-    console.log("Inputs:", inputs);
     // console.log("Books:", books);
     // console.log("Checkouts:", checkouts);
     // console.log("Book Information:", book_information);
